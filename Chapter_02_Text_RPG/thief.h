@@ -5,10 +5,10 @@
 
 class Thief : public Player {
 public:
-	Thief(const string name, const int stats[]) : Player(name, stats) {
+	Thief(const string name, const int stats[], const int potions[]) : Player(name, stats, potions) {
 		cout << "* You became a Rogue! (Attack +30)" << endl;
 		this->job = "Rogue";
-		this->power += 30;
+		this->stats[2] += 30;
 	}
 
 	void attack(void);

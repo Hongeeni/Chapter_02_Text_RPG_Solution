@@ -59,12 +59,7 @@ public:
 	void attack(Player* player);
 
 	~Monster() {
-		if (this->hp > 0) {
-			cout << "Slime quickly ran away." << endl;
-		}
-		else {
-			cout << "Slime slowly melts away." << endl;
-		}
+		cout << "Proceed Next turn!\n" << endl;
 	}
 };
 

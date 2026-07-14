@@ -10,19 +10,22 @@ class Player {
 protected:
 	string name = "None";
 	string job = "None";
+
 	int level = 1;
-	int hp = 0;
-	int mp = 0;
-	int power = 0;
-	int defence = 0;
+	//stats[0] = HP, stats[1] = MP, stats[2] = ATK, stats[3] = DEF
+	int stats[4] = { 0 };
+	//potions[0] = HP_Potion, potions[1] = MP_Potion
+	int potions[2] = { 5, 5 };
 
 public:
-	Player(const string name, const int stats[]) {
+	Player(const string name, const int stats[], const int potions[]) {
 		this->name = name;
-		this->hp = stats[0];
-		this->mp = stats[1];
-		this->power = stats[2];
-		this->defence = stats[3];
+		this->stats[0] = stats[0];	// HP
+		this->stats[1] = stats[1];	// MP
+		this->stats[2] = stats[2];	// ATK
+		this->stats[3] = stats[3];	// DEF
+		this->potions[0] = potions[0];	// HP_Potion
+		this->potions[1] = potions[1];	// MP_Potion
 	}
 
 	//setter
@@ -33,16 +36,22 @@ public:
 		this->job = newJob;
 	}
 	void setHP(int newHP) {
-		this->hp = newHP;
+		this->stats[0] = newHP;
 	}
 	void setMP(int newMP) {
-		this->mp = newMP;
+		this->stats[1] = newMP;
 	}
 	void setPower(int newPower) {
-		this->power = newPower;
+		this->stats[2] = newPower;
 	}
 	void setDefence(int newDefence) {
-		this->defence = newDefence;
+		this->stats[3] = newDefence;
+	}
+	void setHpPotion(int hpPotion) {
+		this->potions[0] = hpPotion;
+	}
+	void setMpPotion(int mpPotion) {
+		this->potions[1] = mpPotion;
 	}
 
 	//getter
@@ -53,16 +62,22 @@ public:
 		return this->job;
 	}
 	const int getHP(void) {
-		return this->hp;
+		return this->stats[0];
 	}
 	const int getMP(void) {
-		return this->mp;
+		return this->stats[1];
 	}
 	const int getPower(void) {
-		return this->power;
+		return this->stats[2];
 	}
 	const int getDefence(void) {
-		return this->defence;
+		return this->stats[3];
+	}
+	const int getHpPotion(void) {
+		return this->potions[0];
+	}
+	const int getMpPotion(void) {
+		return this->potions[1];
 	}
 
 	const void printPlayerStatus(void);
@@ -77,7 +92,7 @@ public:
 const void Player::printPlayerStatus(void) {
 	cout << "-------------------------------------------" << endl;
 	cout << "Name: " << this->name << " | Job: " << this->job << " | Lv." << this->level << endl;
-	cout << "HP: " << this->hp << " | MP: " << this->mp << " | Attack: " << this->power << " | Defence: " << this->defence << endl;
+	cout << "HP: " << this->stats[0] << " | MP: " << this->stats[1] << " | Attack: " << this->stats[2] << " | Defence: " << this->stats[3] << endl;
 	cout << "===========================================" << endl;
 
 	cout << endl;

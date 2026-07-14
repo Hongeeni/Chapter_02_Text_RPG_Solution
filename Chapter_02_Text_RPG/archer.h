@@ -5,10 +5,10 @@
 
 class Archer : public Player {
 public:
-	Archer(const string name, const int stats[]) : Player(name, stats) {
+	Archer(const string name, const int stats[], const int potions[]) : Player(name, stats, potions) {
 		cout << "* You became a Archer! (HP +30)" << endl;
 		this->job = "Archer";
-		this->hp += 30;
+		this->stats[0] += 30;
 	}
 
 	void attack(void);

@@ -9,39 +9,41 @@
 
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
-void printStatus(Player* player);
 void characterUpgrade(int (*potions)[], const string name, int (*stats)[]);
-void characterUpgrade(int (*potions)[], Player* player);
-void selectJob(Player** player, const string name, const int stats[]);
-void adventure(int (*potions)[], Player* player);
+void characterUpgrade(Player* player);
+void selectJob(Player** player, const string name, const int stats[], const int potions[]);
+void adventure(Player* player);
 
 int main(void) {
 	srand(static_cast<unsigned int>(time(NULL)));
 
-	string name = "None";
-	const int statsSize = 4;
-	const int potionsSize = 2;
-
-	//stats[0] = HP, stats[1] = MP, stats[2] = ATK, stats[3] = DEF
-	int stats[statsSize] = { 0 };
-	//potions[0] = HP_Potion, potions[1] = MP_Potion
-	int potions[potionsSize] = { 5, 5 };
-
 	//Player Class
 	Player* player = nullptr;
 
-	setStatus(&name, &stats);
-	printStatus(name, stats);
+	//Player Default Settings
+	{
+		string name = "None";
+		const int statsSize = 4;
+		const int potionsSize = 2;
 
-	//select < Character Upgrade > menu and Game Start
-	characterUpgrade(&potions, name, &stats);
+		//stats[0] = HP, stats[1] = MP, stats[2] = ATK, stats[3] = DEF
+		int stats[statsSize] = { 0 };
+		//potions[0] = HP_Potion, potions[1] = MP_Potion
+		int potions[potionsSize] = { 5, 5 };
 
-	//select < Job Selection > menu
-	selectJob(&player, name, stats);
-	printStatus(player);
+		setStatus(&name, &stats);
+		printStatus(name, stats);
 
+		//select < Character Upgrade > menu and Game Start
+		characterUpgrade(&potions, name, &stats);
+
+		//select < Job Selection > menu
+		selectJob(&player, name, stats, potions);
+		player->attack();
+		player->printPlayerStatus();
+	}
 	//start Game
-	adventure(&potions, player);
+	adventure(player);
 
 	delete player;
 	return 0;
@@ -92,13 +94,6 @@ void printStatus(const string name, const int stats[]) {
 	cout << "Attack: " << stats[2] << "	Defence: " << stats[3] << endl;
 	cout << "===========================================" << endl;
 
-	cout << endl;
-}
-
-void printStatus(Player* player) {
-	player->attack();
-	cout << endl;
-	player->printPlayerStatus();
 	cout << endl;
 }
 
@@ -162,11 +157,11 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 	}
 }
 
-void characterUpgrade(int (*potions)[], Player* player) {
+void characterUpgrade(Player* player) {
 	bool isGameStart = false;
 	int userInputMenu = 0;
 
-	cout << "* You received " << (*potions)[0] << " HP Potions and " << (*potions)[1] << " MP Potions." << endl;
+	cout << "* You received " << player->getHpPotion() << " HP Potions and " << player->getMpPotion() << " MP Potions." << endl;
 	cout << "============================================" << endl;
 	cout << "< Character Upgrade >" << endl;
 	cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
@@ -179,24 +174,24 @@ void characterUpgrade(int (*potions)[], Player* player) {
 
 		switch (userInputMenu) {
 		case 0:
-			cout << "Starting the game!\n" << endl;
+			cout << "Get ready for The next battle!\n" << endl;
 			isGameStart = true;
 			break;
 		case 1:
-			if ((*potions)[0] > 0) {
-				(*potions)[0] -= 1;
+			if (player->getHpPotion() > 0) {
+				player->setHpPotion(player->getHpPotion() - 1);
 				player->setHP(player->getHP() + 20);
-				cout << "* HP increased by 20. (HP Potion used: " << (*potions)[0] << " left)" << endl;
+				cout << "* HP increased by 20. (HP Potion used: " << player->getHpPotion() << " left)" << endl;
 			}
 			else {
 				cout << "* You don't have an HP Potion." << endl;
 			}
 			break;
 		case 2:
-			if ((*potions)[1] > 0) {
-				(*potions)[1] -= 1;
+			if (player->getMpPotion() > 0) {
+				player->setMpPotion(player->getMpPotion() - 1);
 				player->setMP(player->getMP() + 20);
-				cout << "* MP increased by 20. (MP Potion used: " << (*potions)[1] << " left)" << endl;
+				cout << "* MP increased by 20. (MP Potion used: " << player->getMpPotion() << " left)" << endl;
 			}
 			else {
 				cout << "* You don't have an MP Potion." << endl;
@@ -212,7 +207,7 @@ void characterUpgrade(int (*potions)[], Player* player) {
 			break;
 		case 5:
 			cout << endl;
-			printStatus(player);
+			player->printPlayerStatus();
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
@@ -221,7 +216,7 @@ void characterUpgrade(int (*potions)[], Player* player) {
 	}
 }
 
-void selectJob(Player** player, const string name, const int stats[]) {
+void selectJob(Player** player, const string name, const int stats[], const int potions[]) {
 	bool isSelect = false;
 	int userInputMenu = 0;
 
@@ -236,19 +231,19 @@ void selectJob(Player** player, const string name, const int stats[]) {
 
 		switch (userInputMenu) {
 		case 1:
-			*player = new Warrior(name, stats);
+			*player = new Warrior(name, stats, potions);
 			isSelect = true;
 			break;
 		case 2:
-			*player = new Magician(name, stats);
+			*player = new Magician(name, stats, potions);
 			isSelect = true;
 			break;
 		case 3:
-			*player = new Thief(name, stats);
+			*player = new Thief(name, stats, potions);
 			isSelect = true;
 			break;
 		case 4:
-			*player = new Archer(name, stats);
+			*player = new Archer(name, stats, potions);
 			isSelect = true;
 			break;
 		default:
@@ -258,7 +253,7 @@ void selectJob(Player** player, const string name, const int stats[]) {
 	}
 }
 
-void adventure(int (*potions)[], Player* player) {
+void adventure(Player* player) {
 	int userInputMenu = 0;
 
 	do {
@@ -266,7 +261,8 @@ void adventure(int (*potions)[], Player* player) {
 
 		cout << "============================================" << endl;
 		cout << "	< Select Action >" << endl;
-		cout << "1. Adventure!	2. Rest	3. Show Stats	0. Exit Game" << endl;
+		cout << "1. Adventure!	2. Rest	3. Show Stats" << endl;
+		cout << "4. Show Inventory	0. Exit Game" << endl;
 		cout << "============================================\n" << endl;
 
 		cout << "Choose: ";
@@ -294,7 +290,7 @@ void adventure(int (*potions)[], Player* player) {
 					break;
 				case 1:
 					cout << "I have recovered." << endl;
-					characterUpgrade(potions, player);
+					characterUpgrade(player);
 					break;
 				default:
 					cout << "Invalid input. Try again.\n" << endl;
@@ -303,10 +299,10 @@ void adventure(int (*potions)[], Player* player) {
 			}
 			break;
 		case 2:
-			characterUpgrade(potions, player);
+			characterUpgrade(player);
 			break;
 		case 3:
-			printStatus(player);
+			player->printPlayerStatus();
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
