@@ -7,11 +7,19 @@
 #include <cstdlib>
 #include <ctime>
 
+vector<PotionRecipe> recipeBook;
+PotionRecipe hpPotion = { "HPpotion", { "Herb", "Clear Water" } };
+PotionRecipe mpPotion = { "MPpotion", { "Herb", "Berry" } };
+
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
 void characterUpgrade(int (*potions)[], const string name, int (*stats)[]);
 void characterUpgrade(Player* player);
 void selectJob(Player** player, const string name, const int stats[], const int potions[]);
+void potionWorkshop(void);
+void showAllRecipes(void);
+void searchByName(string potionName);
+void searchByIngredient(string ingredient);
 void adventure(Player* player);
 
 int main(void) {
@@ -42,6 +50,9 @@ int main(void) {
 		player->attack();
 		player->printPlayerStatus();
 	}
+	recipeBook.push_back(hpPotion);
+	recipeBook.push_back(mpPotion);
+
 	//start Game
 	adventure(player);
 
@@ -50,7 +61,6 @@ int main(void) {
 }
 
 // Functions
-
 void setStatus(string* name, int (*stats)[]) {
 	cout << "===========================================" << "\n	[Dungeon Escape Text RPG]\n" << "===========================================" << endl;
 	cout << "Enter your hero's name: ";
@@ -165,7 +175,7 @@ void characterUpgrade(Player* player) {
 	cout << "============================================" << endl;
 	cout << "< Character Upgrade >" << endl;
 	cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
-	cout << "4. Defence x2	0. Start Game" << endl;
+	cout << "4. Defence x2	0. Go back" << endl;
 	cout << "============================================" << endl;
 
 	while (!isGameStart) {
@@ -220,8 +230,7 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 	bool isSelect = false;
 	int userInputMenu = 0;
 
-	cout << "============================================" << endl;
-	cout << "< Job Selection >\n" << name << ", choose your job!" << endl;
+	cout << "============================================\n	< Job Selection >\n" << name << ", choose your job!" << endl;
 	cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
 	cout << "============================================" << endl;
 
@@ -254,16 +263,98 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 	}
 }
 
+void potionWorkshop(void) {
+	int userInputMenu = 0;
+	string userInputName = "None";
+	string userInputIngredient = "None";
+
+	do {
+		cout << "============================================\n	< Potion Workshop >\n============================================" << endl;
+		cout << "1. Show all recipes\n2. Search by potion name\n3. Search by ingredient\n0. Go back" << endl;
+		cout << "============================================" << endl;
+
+		cout << "Choose: ";
+		cin >> userInputMenu;
+		cout << endl;
+
+		switch (userInputMenu) {
+		case 0:
+			break;
+		case 1:
+			showAllRecipes();
+			cout << endl;
+			break;
+		case 2:
+			cout << "Search potion name: ";
+			cin >> userInputName;
+			cout << endl;
+			searchByName(userInputName);
+			break;
+		case 3:
+			cout << "Search potion name: ";
+			cin >> userInputIngredient;
+			cout << endl;
+			searchByIngredient(userInputIngredient);
+			break;
+		default:
+			cout << "Invalid input. Try again.\n" << endl;
+			break;
+		}
+	} while (userInputMenu != 0);
+}
+
+void showAllRecipes(void) {
+	cout << "=========== < All recipes > ===========" << endl;
+	for (PotionRecipe recipe : recipeBook) {
+		cout << "=> ";
+		recipe.printRecipe();
+	}
+}
+
+void searchByName(string potionName) {
+	bool isFound = false;
+
+	for (PotionRecipe recipe : recipeBook) {
+		if (potionName == recipe.potionName) {
+			isFound = true;
+			cout << "=> ";
+			recipe.printRecipe();
+			cout << endl;
+			break;
+		}
+	}
+
+	if (!isFound) {
+		cout << "Potion can't be found.\n" << endl;
+	}
+}
+
+void searchByIngredient(string potionIngredient) {
+	bool isFound = false;
+
+	for (PotionRecipe recipe : recipeBook) {
+		if (potionIngredient == recipe.ingredient[0] || potionIngredient == recipe.ingredient[1]) {
+			isFound = true;
+			cout << "=> ";
+			recipe.printRecipe();
+			cout << endl;
+		}
+	}
+
+	if (!isFound) {
+		cout << "Potion can't be found.\n" << endl;
+	}
+}
+
 void adventure(Player* player) {
 	int userInputMenu = 0;
 
 	do {
 		Monster monster;
 
-		cout << "============================================" << endl;
-		cout << "	< Select Action >" << endl;
+		cout << "============================================\n	< Select Action >" << endl;
 		cout << "1. Adventure!	2. Rest	3. Show Stats" << endl;
-		cout << "4. Show Inventory	0. Exit Game" << endl;
+		cout << "4. Show Inventory	5. Potion Shop	0. Exit Game" << endl;
 		cout << "============================================" << endl;
 
 		cout << "Choose: ";
@@ -278,8 +369,7 @@ void adventure(Player* player) {
 			monster.attack(player);
 
 			if (player->getHP() <= 0) {
-				cout << "============================================" << endl;
-				cout << "	< Select Action >" << endl;
+				cout << "============================================\n	< Select Action >" << endl;
 				cout << "1. Rest	0. Exit Game" << endl;
 				cout << "============================================\n" << endl;
 
@@ -308,6 +398,9 @@ void adventure(Player* player) {
 			break;
 		case 4:
 			player->printInventory();
+			break;
+		case 5:
+			potionWorkshop();
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;

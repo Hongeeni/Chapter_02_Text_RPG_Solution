@@ -8,14 +8,25 @@
 using namespace std;
 
 struct Item {
-	string name;
-	int price;
+	string name = "None";
+	int price = 0;
 
-	void printInfo(void) const;
+	const void printInfo(void) const;
 };
 
-void Item::printInfo(void) const {
+struct PotionRecipe {
+	string potionName = "None";
+	string ingredient[2] = {"None", "None"};
+
+	const void printRecipe(void) const;
+};
+
+const void Item::printInfo(void) const {
 	cout << this->name << " (" << this->price << "G)" << endl;
+}
+
+const void PotionRecipe::printRecipe(void) const {
+	cout << this->potionName << " ( " << this->ingredient[0] << ", " << this->ingredient[1] << " )" << endl;
 }
 
 #endif
