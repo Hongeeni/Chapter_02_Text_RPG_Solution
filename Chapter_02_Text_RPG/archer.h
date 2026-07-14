@@ -1,0 +1,25 @@
+#ifndef _ARCHER_H_
+#define _ARCHER_H_
+
+#include "monster.h"
+
+class Archer : public Player {
+public:
+	Archer(const string name, const int stats[]) : Player(name, stats) {
+		cout << "* You became a Archer! (HP +30)" << endl;
+		this->job = "Archer";
+		this->hp += 30;
+	}
+
+	void attack(void);
+
+	~Archer(void) {
+		cout << "See you!" << endl;
+	}
+};
+
+void Archer::attack(void) {
+	cout << "* Shoot a bow!" << endl;
+}
+
+#endif
