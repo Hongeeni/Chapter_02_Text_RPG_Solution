@@ -109,11 +109,16 @@ const void Player::printPlayerStatus(void) {
 }
 
 const void Player::printInventory(void) {
-	cout << "===========================================\n	[ " << this->name << "'s Inventory ]\n" << "===========================================" << endl;
+	cout << "===========================================\n	[ " << this->name << "'s Inventory " << this->inventory.size() << "/10 ]\n===========================================" << endl;
 
-	for (int i = 0; i < this->inventory.size(); i++) {
-		cout << (i + 1) << ". ";
-		this->inventory[i].printInfo();
+	for (int i = 0; i < 10; i++) {
+		if (i < this->inventory.size()) {
+			cout << (i + 1) << ". ";
+			this->inventory[i].printInfo();
+		}
+		else {
+			cout << (i + 1) << ". Empty" << endl;
+		}
 	}
 
 	cout << "===========================================\n" << endl;

@@ -109,8 +109,13 @@ void Monster::attack(Player* player) {
 				cout << "* Victory!" << endl;
 				cout << "	=> Got: " << this->getDropItemName() << "!" << endl;
 
-				player->pushItem(item);
-				cout << "	=> Saved to inventory." << endl;
+				if (player->getInventory().size() < 10) {
+					player->pushItem(item);
+					cout << "	=> Saved to inventory." << endl;
+				}
+				else {
+					cout << "	=> Inventory is full." << endl;
+				}
 			}
 
 			isPlayerTurn = !isPlayerTurn;
