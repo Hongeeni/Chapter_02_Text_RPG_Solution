@@ -14,7 +14,8 @@ protected:
 	int dropItemPrice = 0;
 
 public:
-	Monster(string inputName = "Slime", int inputHP = 100, int inputPower = 200, int inputDefence = 70, string inputDropItemName = "Slime Jelly", int inputDropItemPrice = 5) : name(inputName), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
+	Monster(string inputName = "Slime", int inputHP = 100, int inputPower = 200, int inputDefence = 70, string inputDropItemName = "Slime Jelly", int inputDropItemPrice = 5)
+		: name(inputName), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
 
 	//setter
 	void setName(string newName) {
@@ -100,10 +101,16 @@ void Monster::attack(Player* player) {
 				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
 			}
 			else {
+				Item item;
+				item.name = this->getDropItemName();
+				item.price = this->getDropItemPrice();
+
 				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
 				cout << "* Victory!" << endl;
 				cout << "	=> Got: " << this->getDropItemName() << "!" << endl;
-				cout << "	(Will be saved to inventory in the next STEP)" << endl;
+
+				player->pushItem(item);
+				cout << "	=> Saved to inventory." << endl;
 			}
 
 			isPlayerTurn = !isPlayerTurn;

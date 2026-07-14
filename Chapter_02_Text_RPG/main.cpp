@@ -112,6 +112,7 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 	while (!isGameStart) {
 		cout << "Choose: ";
 		cin >> userInputMenu;
+		cout << endl;
 
 		switch (userInputMenu) {
 		case 0:
@@ -122,32 +123,31 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 			if ((*potions)[0] > 0) {
 				(*potions)[0] -= 1;
 				(*stats)[0] += 20;
-				cout << "* HP increased by 20. (HP Potion used: " << (*potions)[0] << " left)" << endl;
+				cout << "* HP increased by 20. (HP Potion used: " << (*potions)[0] << " left)\n" << endl;
 			}
 			else {
-				cout << "* You don't have an HP Potion." << endl;
+				cout << "* You don't have an HP Potion.\n" << endl;
 			}
 			break;
 		case 2:
 			if ((*potions)[1] > 0) {
 				(*potions)[1] -= 1;
 				(*stats)[1] += 20;
-				cout << "* MP increased by 20. (MP Potion used: " << (*potions)[1] << " left)" << endl;
+				cout << "* MP increased by 20. (MP Potion used: " << (*potions)[1] << " left)\n" << endl;
 			}
 			else {
-				cout << "* You don't have an MP Potion." << endl;
+				cout << "* You don't have an MP Potion.\n" << endl;
 			}
 			break;
 		case 3:
-			cout << "* Attack has dobled." << endl;
+			cout << "* Attack has dobled.\n" << endl;
 			(*stats)[2] *= 2;
 			break;
 		case 4:
-			cout << "* Defence has dobled." << endl;
+			cout << "* Defence has dobled.\n" << endl;
 			(*stats)[3] *= 2;
 			break;
 		case 5:
-			cout << endl;
 			printStatus(name, (*stats));
 			break;
 		default:
@@ -223,11 +223,12 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 	cout << "============================================" << endl;
 	cout << "< Job Selection >\n" << name << ", choose your job!" << endl;
 	cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
-	cout << "============================================\n" << endl;
+	cout << "============================================" << endl;
 
 	while (!isSelect) {
 		cout << "Choose: ";
 		cin >> userInputMenu;
+		cout << endl;
 
 		switch (userInputMenu) {
 		case 1:
@@ -263,10 +264,11 @@ void adventure(Player* player) {
 		cout << "	< Select Action >" << endl;
 		cout << "1. Adventure!	2. Rest	3. Show Stats" << endl;
 		cout << "4. Show Inventory	0. Exit Game" << endl;
-		cout << "============================================\n" << endl;
+		cout << "============================================" << endl;
 
 		cout << "Choose: ";
 		cin >> userInputMenu;
+		cout << endl;
 
 		switch (userInputMenu) {
 		case 0:
@@ -303,6 +305,9 @@ void adventure(Player* player) {
 			break;
 		case 3:
 			player->printPlayerStatus();
+			break;
+		case 4:
+			player->printInventory();
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;

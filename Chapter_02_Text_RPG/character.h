@@ -1,10 +1,7 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include "item.h"
 
 class Player {
 protected:
@@ -16,6 +13,9 @@ protected:
 	int stats[4] = { 0 };
 	//potions[0] = HP_Potion, potions[1] = MP_Potion
 	int potions[2] = { 5, 5 };
+
+	//inventory
+	vector<Item> inventory;
 
 public:
 	Player(const string name, const int stats[], const int potions[]) {
@@ -53,6 +53,12 @@ public:
 	void setMpPotion(int mpPotion) {
 		this->potions[1] = mpPotion;
 	}
+	void pushItem(Item item) {
+		this->inventory.push_back(item);
+	}
+	void popItem(Item item) {
+		this->inventory.pop_back();
+	}
 
 	//getter
 	const string getName(void) {
@@ -79,8 +85,12 @@ public:
 	const int getMpPotion(void) {
 		return this->potions[1];
 	}
+	const vector<Item> getInventory(void) {
+		return this->inventory;
+	}
 
 	const void printPlayerStatus(void);
+	const void printInventory(void);
 
 	virtual void attack() = 0;
 
@@ -96,6 +106,17 @@ const void Player::printPlayerStatus(void) {
 	cout << "===========================================" << endl;
 
 	cout << endl;
+}
+
+const void Player::printInventory(void) {
+	cout << "===========================================\n	[ " << this->name << "'s Inventory ]\n" << "===========================================" << endl;
+
+	for (int i = 0; i < this->inventory.size(); i++) {
+		cout << (i + 1) << ". ";
+		this->inventory[i].printInfo();
+	}
+
+	cout << "===========================================\n" << endl;
 }
 
 #endif
