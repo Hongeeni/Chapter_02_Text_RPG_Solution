@@ -14,7 +14,7 @@ protected:
 	int dropItemPrice = 0;
 
 public:
-	Monster(string inputName = "Slime", int inputHP = 100, int inputPower = 200, int inputDefence = 70, string inputDropItemName = "Slime Jelly", int inputDropItemPrice = 5)
+	Monster(string inputName = "Ghost", int inputHP = 100, int inputPower = 100, int inputDefence = 10, string inputDropItemName = "Fragment of The Soul", int inputDropItemPrice = 5)
 		: name(inputName), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
 
 	//setter
@@ -59,9 +59,7 @@ public:
 
 	void attack(Player* player);
 
-	~Monster() {
-		cout << "Proceed Next turn!\n" << endl;
-	}
+	~Monster() {}
 };
 
 void Monster::attack(Player* player) {
@@ -122,7 +120,7 @@ void Monster::attack(Player* player) {
 		}
 		else {
 			cout << "--- Monster's Turn ---" << endl;
-			cout << "The slime lunged!" << endl;
+			cout << "The " << this->getName() << " lunged!" << endl;
 			cout << monsterATK << " damage to " << player->getName() << " !" << endl;
 
 			tempHP = player->getHP();

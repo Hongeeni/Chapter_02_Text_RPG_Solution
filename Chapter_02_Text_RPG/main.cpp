@@ -8,8 +8,13 @@
 #include <ctime>
 
 vector<PotionRecipe> recipeBook;
-PotionRecipe hpPotion = { "HPpotion", { "Herb", "Clear Water" } };
-PotionRecipe mpPotion = { "MPpotion", { "Herb", "Berry" } };
+PotionRecipe hpPotion = { "HP Potion", { "Herb", "Clear Water" } };
+PotionRecipe mpPotion = { "MP Potion", { "Herb", "Berry" } };
+
+vector<Monster> monsterType;
+Monster slime("Slime", 130, 100, 30, "Slime's Jelly", 7);
+Monster wolf("Wolf", 175, 160, 50, "Wolf's Fur", 23);
+Monster golem("Golem", 300, 210, 100, "Golem's Stone", 74);
 
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
@@ -53,6 +58,10 @@ int main(void) {
 	recipeBook.push_back(hpPotion);
 	recipeBook.push_back(mpPotion);
 
+	monsterType.push_back(slime);
+	monsterType.push_back(wolf);
+	monsterType.push_back(golem);
+
 	//start Game
 	adventure(player);
 
@@ -76,14 +85,23 @@ void setStatus(string* name, int (*stats)[]) {
 	cout << endl;
 
 	// check HP and MP
-	if ((*stats)[0] < 50 || (*stats)[1] < 50) {
+	if ((*stats)[0] < 99 || (*stats)[1] < 99) {
 		do {
 			cout << "HP or MP is too low. Try again." << endl;
 			cout << "Enter HP and MP: ";
 			cin >> (*stats)[0] >> (*stats)[1];
 
 			cout << endl;
-		} while ((*stats)[0] < 50 || (*stats)[1] < 50);
+		} while ((*stats)[0] < 99 || (*stats)[1] < 99);
+	}
+	else if ((*stats)[0] > 1501 || (*stats)[1] > 1501) {
+		do {
+			cout << "HP or MP is too high. Try again." << endl;
+			cout << "Enter HP and MP: ";
+			cin >> (*stats)[0] >> (*stats)[1];
+
+			cout << endl;
+		} while ((*stats)[0] > 1501 || (*stats)[1] > 1501);
 	}
 
 	// check ATK and DEF
@@ -95,6 +113,15 @@ void setStatus(string* name, int (*stats)[]) {
 
 			cout << endl;
 		} while ((*stats)[2] < 50 || (*stats)[3] < 50);
+	}
+	else if ((*stats)[2] > 201 || (*stats)[3] > 201) {
+		do {
+			cout << "Attack or Defense is too high. Try again." << endl;
+			cout << "Enter HP and MP: ";
+			cin >> (*stats)[0] >> (*stats)[1];
+
+			cout << endl;
+		} while ((*stats)[2] > 201 || (*stats)[3] > 201);
 	}
 }
 
@@ -110,7 +137,8 @@ void printStatus(const string name, const int stats[]) {
 //select < Character Upgrade > menu and Game Start
 void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 	bool isGameStart = false;
-	int userInputMenu = 0;
+	string userInput = "None";
+	int inputMenu = 0;
 
 	cout << "* You received " << (*potions)[0] << " HP Potions and " << (*potions)[1] << " MP Potions." << endl;
 	cout << "============================================" << endl;
@@ -121,10 +149,18 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 
 	while (!isGameStart) {
 		cout << "Choose: ";
-		cin >> userInputMenu;
+		cin >> userInput;
 		cout << endl;
 
-		switch (userInputMenu) {
+		if (userInput >= "0" && userInput <= "9") {
+			inputMenu = stoi(userInput);
+		}
+		else {
+			cout << "Invalid input. Try again.\n" << endl;
+			continue;
+		}
+
+		switch (inputMenu) {
 		case 0:
 			cout << "Starting the game!\n" << endl;
 			isGameStart = true;
@@ -169,7 +205,8 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 
 void characterUpgrade(Player* player) {
 	bool isGameStart = false;
-	int userInputMenu = 0;
+	string userInput = "None";
+	int inputMenu = 0;
 
 	cout << "* You received " << player->getHpPotion() << " HP Potions and " << player->getMpPotion() << " MP Potions." << endl;
 	cout << "============================================" << endl;
@@ -180,9 +217,17 @@ void characterUpgrade(Player* player) {
 
 	while (!isGameStart) {
 		cout << "Choose: ";
-		cin >> userInputMenu;
+		cin >> userInput;
 
-		switch (userInputMenu) {
+		if (userInput >= "0" && userInput <= "9") {
+			inputMenu = stoi(userInput);
+		}
+		else {
+			cout << "Invalid input. Try again.\n" << endl;
+			continue;
+		}
+
+		switch (inputMenu) {
 		case 0:
 			cout << "Get ready for The next battle!\n" << endl;
 			isGameStart = true;
@@ -228,7 +273,8 @@ void characterUpgrade(Player* player) {
 
 void selectJob(Player** player, const string name, const int stats[], const int potions[]) {
 	bool isSelect = false;
-	int userInputMenu = 0;
+	string userInput = "None";
+	int inputMenu = 0;
 
 	cout << "============================================\n	< Job Selection >\n" << name << ", choose your job!" << endl;
 	cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
@@ -236,10 +282,18 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 
 	while (!isSelect) {
 		cout << "Choose: ";
-		cin >> userInputMenu;
+		cin >> userInput;
 		cout << endl;
 
-		switch (userInputMenu) {
+		if (userInput >= "0" && userInput <= "9") {
+			inputMenu = stoi(userInput);
+		}
+		else {
+			cout << "Invalid input. Try again.\n" << endl;
+			continue;
+		}
+
+		switch (inputMenu) {
 		case 1:
 			*player = new Warrior(name, stats, potions);
 			isSelect = true;
@@ -264,9 +318,9 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 }
 
 void potionWorkshop(void) {
-	int userInputMenu = 0;
-	string userInputName = "None";
-	string userInputIngredient = "None";
+	int inputMenu = 0;
+	string userInput = "None";
+	string lowerByUserInput = "None";
 
 	do {
 		cout << "============================================\n	< Potion Workshop >\n============================================" << endl;
@@ -274,10 +328,18 @@ void potionWorkshop(void) {
 		cout << "============================================" << endl;
 
 		cout << "Choose: ";
-		cin >> userInputMenu;
+		cin >> userInput;
 		cout << endl;
 
-		switch (userInputMenu) {
+		if (userInput >= "0" && userInput <= "9") {
+			inputMenu = stoi(userInput);
+		}
+		else {
+			cout << "Invalid input. Try again.\n" << endl;
+			continue;
+		}
+
+		switch (inputMenu) {
 		case 0:
 			break;
 		case 1:
@@ -286,21 +348,31 @@ void potionWorkshop(void) {
 			break;
 		case 2:
 			cout << "Search potion name: ";
-			cin >> userInputName;
+			cin >> userInput;
 			cout << endl;
-			searchByName(userInputName);
+
+			lowerByUserInput = userInput;
+			for (int i = 0; i < lowerByUserInput.size(); i++) {
+				lowerByUserInput[i] = tolower(lowerByUserInput[i]);
+			}
+			searchByName(lowerByUserInput);
 			break;
 		case 3:
-			cout << "Search potion name: ";
-			cin >> userInputIngredient;
+			cout << "Search potion Ingredient: ";
+			cin >> userInput;
 			cout << endl;
-			searchByIngredient(userInputIngredient);
+
+			lowerByUserInput = userInput;
+			for (int i = 0; i < lowerByUserInput.size(); i++) {
+				lowerByUserInput[i] = tolower(lowerByUserInput[i]);
+			}
+			searchByIngredient(lowerByUserInput);
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
 			break;
 		}
-	} while (userInputMenu != 0);
+	} while (inputMenu != 0);
 }
 
 void showAllRecipes(void) {
@@ -313,9 +385,19 @@ void showAllRecipes(void) {
 
 void searchByName(string potionName) {
 	bool isFound = false;
+	string tempName = "None";
 
 	for (PotionRecipe recipe : recipeBook) {
-		if (potionName == recipe.potionName) {
+		tempName = recipe.potionName;
+		remove(tempName.begin(), tempName.end(), ' ');
+		tempName.pop_back();
+
+
+		for (int i = 0; i < tempName.size(); i++) {
+			tempName[i] = tolower(tempName[i]);
+		}
+
+		if (potionName == tempName) {
 			isFound = true;
 			cout << "=> ";
 			recipe.printRecipe();
@@ -331,9 +413,18 @@ void searchByName(string potionName) {
 
 void searchByIngredient(string potionIngredient) {
 	bool isFound = false;
+	string tempIngredient[2] = { "None", "None" };
 
 	for (PotionRecipe recipe : recipeBook) {
-		if (potionIngredient == recipe.ingredient[0] || potionIngredient == recipe.ingredient[1]) {
+		for (int x = 0; x < 2; x++) {
+			tempIngredient[x] = recipe.ingredient[x];
+
+			for (int y = 0; y < tempIngredient[x].size(); y++) {
+				(tempIngredient[x])[y] = tolower((tempIngredient[x])[y]);
+			}
+		}
+
+		if (potionIngredient == tempIngredient[0] || potionIngredient == tempIngredient[1]) {
 			isFound = true;
 			cout << "=> ";
 			recipe.printRecipe();
@@ -347,10 +438,14 @@ void searchByIngredient(string potionIngredient) {
 }
 
 void adventure(Player* player) {
-	int userInputMenu = 0;
+	string userInput = "None";
+	int inputMenu = 0;
 
 	do {
 		Monster monster;
+
+		int randomMonsterIndex = rand() % 3;
+		monster = monsterType[randomMonsterIndex];
 
 		cout << "============================================\n	< Select Action >" << endl;
 		cout << "1. Adventure!	2. Rest	3. Show Stats" << endl;
@@ -358,10 +453,18 @@ void adventure(Player* player) {
 		cout << "============================================" << endl;
 
 		cout << "Choose: ";
-		cin >> userInputMenu;
+		cin >> userInput;
 		cout << endl;
 
-		switch (userInputMenu) {
+		if (userInput >= "0" && userInput <= "9") {
+			inputMenu = stoi(userInput);
+		}
+		else {
+			cout << "Invalid input. Try again.\n" << endl;
+			continue;
+		}
+
+		switch (inputMenu) {
 		case 0:
 			cout << "The hero returned home after finishing the adventure." << endl;
 			break;
@@ -374,9 +477,17 @@ void adventure(Player* player) {
 				cout << "============================================\n" << endl;
 
 				cout << "Choose: ";
-				cin >> userInputMenu;
+				cin >> userInput;
 
-				switch (userInputMenu) {
+				if (userInput >= "0" && userInput <= "9") {
+					inputMenu = stoi(userInput);
+				}
+				else {
+					cout << "Invalid input. Try again.\n" << endl;
+					continue;
+				}
+
+				switch (inputMenu) {
 				case 0:
 					cout << "The hero returned home after finishing the adventure." << endl;
 					break;
@@ -406,5 +517,5 @@ void adventure(Player* player) {
 			cout << "Invalid input. Try again.\n" << endl;
 			break;
 		}
-	} while (userInputMenu != 0);
+	} while (inputMenu != 0);
 }
