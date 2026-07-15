@@ -54,6 +54,8 @@ int main(void) {
 		selectJob(&player, name, stats, potions);
 		player->attack();
 		player->printPlayerStatus();
+		system("pause");
+		system("cls");
 	}
 	recipeBook.push_back(hpPotion);
 	recipeBook.push_back(mpPotion);
@@ -77,51 +79,34 @@ void setStatus(string* name, int (*stats)[]) {
 
 	cout << endl;
 
-	cout << "Enter HP and MP: ";
+	cout << "(HP and MP input range : 100 ~ 500)\nEnter HP and MP: ";
 	cin >> (*stats)[0] >> (*stats)[1];
-	cout << "Enter Attack and Defence: ";
+	cout << endl;
+	cout << "(Attack and Defence input range : 50 ~ 200)\nEnter Attack and Defence: ";
 	cin >> (*stats)[2] >> (*stats)[3];
 
 	cout << endl;
 
 	// check HP and MP
-	if ((*stats)[0] < 99 || (*stats)[1] < 99) {
+	if (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 501 || (*stats)[1] > 501)) {
 		do {
-			cout << "HP or MP is too low. Try again." << endl;
+			cout << "HP or MP is outside The input range. Try again." << endl;
 			cout << "Enter HP and MP: ";
 			cin >> (*stats)[0] >> (*stats)[1];
 
 			cout << endl;
-		} while ((*stats)[0] < 99 || (*stats)[1] < 99);
-	}
-	else if ((*stats)[0] > 1501 || (*stats)[1] > 1501) {
-		do {
-			cout << "HP or MP is too high. Try again." << endl;
-			cout << "Enter HP and MP: ";
-			cin >> (*stats)[0] >> (*stats)[1];
-
-			cout << endl;
-		} while ((*stats)[0] > 1501 || (*stats)[1] > 1501);
+		} while (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 501 || (*stats)[1] > 501));
 	}
 
 	// check ATK and DEF
-	if ((*stats)[2] < 50 || (*stats)[3] < 50) {
+	if (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 201 || (*stats)[3] > 201)) {
 		do {
-			cout << "Attack or Defense is too low. Try again." << endl;
+			cout << "Attack or Defense is outside The input range. Try again." << endl;
 			cout << "Enter Attack and Defence: ";
 			cin >> (*stats)[2] >> (*stats)[3];
 
 			cout << endl;
-		} while ((*stats)[2] < 50 || (*stats)[3] < 50);
-	}
-	else if ((*stats)[2] > 201 || (*stats)[3] > 201) {
-		do {
-			cout << "Attack or Defense is too high. Try again." << endl;
-			cout << "Enter HP and MP: ";
-			cin >> (*stats)[0] >> (*stats)[1];
-
-			cout << endl;
-		} while ((*stats)[2] > 201 || (*stats)[3] > 201);
+		} while (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 201 || (*stats)[3] > 201));
 	}
 }
 
@@ -131,7 +116,8 @@ void printStatus(const string name, const int stats[]) {
 	cout << "Attack: " << stats[2] << "	Defence: " << stats[3] << endl;
 	cout << "===========================================" << endl;
 
-	cout << endl;
+	system("pause");
+	system("cls");
 }
 
 //select < Character Upgrade > menu and Game Start
@@ -140,14 +126,13 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 	string userInput = "None";
 	int inputMenu = 0;
 
-	cout << "* You received " << (*potions)[0] << " HP Potions and " << (*potions)[1] << " MP Potions." << endl;
-	cout << "============================================" << endl;
-	cout << "< Character Upgrade >" << endl;
-	cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
-	cout << "4. Defence x2  5. Show Stats  0. Start Game" << endl;
-	cout << "============================================" << endl;
-
 	while (!isGameStart) {
+		cout << "* You received " << (*potions)[0] << " HP Potions and " << (*potions)[1] << " MP Potions." << endl;
+		cout << "============================================" << endl;
+		cout << "< Character Upgrade >" << endl;
+		cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
+		cout << "4. Defence x2  5. Status  0. Start Game" << endl;
+		cout << "============================================" << endl;
 		cout << "Choose: ";
 		cin >> userInput;
 		cout << endl;
@@ -164,6 +149,8 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 		case 0:
 			cout << "Starting the game!\n" << endl;
 			isGameStart = true;
+			system("pause");
+			system("cls");
 			break;
 		case 1:
 			if ((*potions)[0] > 0) {
@@ -174,6 +161,8 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 			else {
 				cout << "* You don't have an HP Potion.\n" << endl;
 			}
+			system("pause");
+			system("cls");
 			break;
 		case 2:
 			if ((*potions)[1] > 0) {
@@ -184,20 +173,28 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 			else {
 				cout << "* You don't have an MP Potion.\n" << endl;
 			}
+			system("pause");
+			system("cls");
 			break;
 		case 3:
 			cout << "* Attack has dobled.\n" << endl;
 			(*stats)[2] *= 2;
+			system("pause");
+			system("cls");
 			break;
 		case 4:
 			cout << "* Defence has dobled.\n" << endl;
 			(*stats)[3] *= 2;
+			system("pause");
+			system("cls");
 			break;
 		case 5:
 			printStatus(name, (*stats));
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	}
@@ -208,14 +205,13 @@ void characterUpgrade(Player* player) {
 	string userInput = "None";
 	int inputMenu = 0;
 
-	cout << "* You received " << player->getHpPotion() << " HP Potions and " << player->getMpPotion() << " MP Potions." << endl;
-	cout << "============================================" << endl;
-	cout << "< Character Upgrade >" << endl;
-	cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
-	cout << "4. Defence x2	0. Go back" << endl;
-	cout << "============================================" << endl;
-
 	while (!isGameStart) {
+		cout << "* You received " << player->getHpPotion() << " HP Potions and " << player->getMpPotion() << " MP Potions." << endl;
+		cout << "============================================" << endl;
+		cout << "< Character Upgrade >" << endl;
+		cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
+		cout << "4. Defence x2	0. Go back" << endl;
+		cout << "============================================" << endl;
 		cout << "Choose: ";
 		cin >> userInput;
 
@@ -231,6 +227,8 @@ void characterUpgrade(Player* player) {
 		case 0:
 			cout << "Get ready for The next battle!\n" << endl;
 			isGameStart = true;
+			system("pause");
+			system("cls");
 			break;
 		case 1:
 			if (player->getHpPotion() > 0) {
@@ -241,6 +239,8 @@ void characterUpgrade(Player* player) {
 			else {
 				cout << "* You don't have an HP Potion." << endl;
 			}
+			system("pause");
+			system("cls");
 			break;
 		case 2:
 			if (player->getMpPotion() > 0) {
@@ -251,21 +251,30 @@ void characterUpgrade(Player* player) {
 			else {
 				cout << "* You don't have an MP Potion." << endl;
 			}
+			system("pause");
+			system("cls");
 			break;
 		case 3:
 			cout << "* Attack has dobled." << endl;
 			player->setPower(player->getPower() * 2);
+			system("pause");
+			system("cls");
 			break;
 		case 4:
 			cout << "* Defence has dobled." << endl;
 			player->setDefence(player->getDefence() * 2);
+			system("pause");
+			system("cls");
 			break;
 		case 5:
-			cout << endl;
 			player->printPlayerStatus();
+			system("pause");
+			system("cls");
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	}
@@ -341,6 +350,8 @@ void potionWorkshop(void) {
 
 		switch (inputMenu) {
 		case 0:
+			system("pause");
+			system("cls");
 			break;
 		case 1:
 			showAllRecipes();
@@ -381,6 +392,8 @@ void showAllRecipes(void) {
 		cout << "=> ";
 		recipe.printRecipe();
 	}
+	system("pause");
+	system("cls");
 }
 
 void searchByName(string potionName) {
@@ -409,6 +422,9 @@ void searchByName(string potionName) {
 	if (!isFound) {
 		cout << "Potion can't be found.\n" << endl;
 	}
+
+	system("pause");
+	system("cls");
 }
 
 void searchByIngredient(string potionIngredient) {
@@ -435,6 +451,9 @@ void searchByIngredient(string potionIngredient) {
 	if (!isFound) {
 		cout << "Potion can't be found.\n" << endl;
 	}
+
+	system("pause");
+	system("cls");
 }
 
 void adventure(Player* player) {
@@ -448,8 +467,8 @@ void adventure(Player* player) {
 		monster = monsterType[randomMonsterIndex];
 
 		cout << "============================================\n	< Select Action >" << endl;
-		cout << "1. Adventure!	2. Rest	3. Show Stats" << endl;
-		cout << "4. Show Inventory	5. Potion Shop	0. Exit Game" << endl;
+		cout << "1. Adventure!	2. Rest	3. Status" << endl;
+		cout << "4. Inventory	5. Potion Shop	0. Exit Game" << endl;
 		cout << "============================================" << endl;
 
 		cout << "Choose: ";
@@ -466,12 +485,15 @@ void adventure(Player* player) {
 
 		switch (inputMenu) {
 		case 0:
-			cout << "The hero returned home after finishing the adventure." << endl;
+			cout << "The hero returned home after finishing the adventure." << endl << endl;
 			break;
 		case 1:
 			monster.attack(player);
+			system("pause");
+			system("cls");
 
 			if (player->getHP() <= 0) {
+				cout << "* Your HP is very low. You need to rest." << endl;
 				cout << "============================================\n	< Select Action >" << endl;
 				cout << "1. Rest	0. Exit Game" << endl;
 				cout << "============================================\n" << endl;
@@ -492,7 +514,6 @@ void adventure(Player* player) {
 					cout << "The hero returned home after finishing the adventure." << endl;
 					break;
 				case 1:
-					cout << "I have recovered." << endl;
 					characterUpgrade(player);
 					break;
 				default:
@@ -502,19 +523,29 @@ void adventure(Player* player) {
 			}
 			break;
 		case 2:
+			system("cls");
 			characterUpgrade(player);
 			break;
 		case 3:
 			player->printPlayerStatus();
+			system("pause");
+			system("cls");
 			break;
 		case 4:
+			system("cls");
+
 			player->printInventory();
+			system("pause");
+			system("cls");
 			break;
 		case 5:
+			system("cls");
 			potionWorkshop();
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	} while (inputMenu != 0);

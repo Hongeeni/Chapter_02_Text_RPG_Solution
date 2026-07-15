@@ -100,7 +100,7 @@ public:
 };
 
 const void Player::printPlayerStatus(void) {
-	cout << "-------------------------------------------" << endl;
+	cout << "===========================================" << endl;
 	cout << "Name: " << this->name << " | Job: " << this->job << " | Lv." << this->level << endl;
 	cout << "HP: " << this->stats[0] << " | MP: " << this->stats[1] << " | Attack: " << this->stats[2] << " | Defence: " << this->stats[3] << endl;
 	cout << "===========================================" << endl;
