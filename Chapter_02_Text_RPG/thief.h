@@ -37,13 +37,12 @@ void Thief::attack(Monster* monster) {
 	do {
 		if (isPlayerTurn) {
 			int playerATK = 0;
-
+			int randomNum = (rand() % 2);
 			cout << "-------------- Player's Turn --------------" << endl;
 			cout << "* Choose between attacking and dodging" << endl;
 			cout << "-------------------------------------------\n	< Select Action >" << endl;
-			cout << "1. Attack the monster\n2. Hide to avoid the attack." << endl;
+			cout << "1. Attack the monster\n2. Hide and attack from behind." << endl;
 			cout << "-------------------------------------------" << endl;
-
 			cout << "Choose: ";
 			cin >> userInput;
 			cout << endl;
@@ -57,7 +56,7 @@ void Thief::attack(Monster* monster) {
 					cout << "-------------- Player's Turn --------------" << endl;
 					cout << "* Choose between attacking and dodging" << endl;
 					cout << "-------------------------------------------\n	< Select Action >" << endl;
-					cout << "1. Attack the monster\n2. Hide to avoid the attack." << endl;
+					cout << "1. Attack the monster\n2. Hide and attack from behind." << endl;
 					cout << "-------------------------------------------" << endl;
 					cout << "Invalid input. Try again.\n\nChoose: ";
 					cin >> userInput;
@@ -107,44 +106,63 @@ void Thief::attack(Monster* monster) {
 				break;
 			case 2:
 				cout << "* Disappeared into the bushes.\n" << endl;
-				cout << "-------------- Monster's Turn --------------" << endl;
-				cout << "The " << monster->getName() << " lunged!\n" << endl;
-				cout << "* The monster's attack failed!\n" << endl;
+				if (randomNum) {
+					cout << "* Attack successful!" << endl;
+					cout << "-------------- Player's Turn --------------" << endl;
+					this->getPumped();
+					cout << (playerATK * 3 / 2) << " damage to " << monster->getName() << " !" << endl;
 
-				if (this->getPower() - monster->getDefence() < 2) {
-					playerATK = 1;
-				}
-				else {
-					playerATK = this->getPower() - monster->getDefence();
-				}
+					tempHP = monster->getHP();
+					monster->setHP(monster->getHP() - (playerATK * 3 / 2));
 
-				cout << "-------------- Player's Turn --------------" << endl;
-				this->getPumped();
-				cout << playerATK << " damage to " << monster->getName() << " !" << endl;
-
-				tempHP = monster->getHP();
-				monster->setHP(monster->getHP() - playerATK);
-
-				if (monster->getHP() > 0) {
-					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
-				}
-				else {
-					Item item;
-					item.name = monster->getDropItemName();
-					item.price = monster->getDropItemPrice();
-
-					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
-					cout << "* Victory!" << endl;
-
-					this->gainExp(monster->getExp());
-					cout << "\n	=> Got: " << monster->getDropItemName() << "!" << endl;
-
-					if (this->getInventory().size() < 10) {
-						this->pushItem(item);
-						cout << "	=> Saved to inventory." << endl;
+					if (monster->getHP() > 0) {
+						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
 					}
 					else {
-						cout << "	=> Inventory is full." << endl;
+						Item item;
+						item.name = monster->getDropItemName();
+						item.price = monster->getDropItemPrice();
+
+						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
+						cout << "* Victory!" << endl;
+
+						this->gainExp(monster->getExp());
+						cout << "\n	=> Got: " << monster->getDropItemName() << "!" << endl;
+
+						if (this->getInventory().size() < 10) {
+							this->pushItem(item);
+							cout << "	=> Saved to inventory." << endl;
+						}
+						else {
+							cout << "	=> Inventory is full." << endl;
+						}
+					}
+				}
+				else {
+					int monsterATK = 0;
+					cout << "* Attack failed." << endl;
+					cout << "-------------- Monster's Turn --------------" << endl;
+					cout << "The " << monster->getName() << " lunged!" << endl;
+
+					if (monster->getPower() - this->getDefence() <= 0) {
+						monsterATK = 1;
+					}
+					else {
+						monsterATK = monster->getPower() - this->getDefence();
+					}
+					cout << monsterATK << " damage to " << this->getName() << " !" << endl;
+
+					tempHP = this->getHP();
+					this->setHP(this->getHP() - monsterATK);
+
+					if (this->getHP() > 0) {
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
+					}
+					else {
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
+						cout << "* The End..." << endl;
+
+						this->setHP(0);
 					}
 				}
 				break;
