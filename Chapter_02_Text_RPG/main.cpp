@@ -7,15 +7,16 @@
 #include <cstdlib>
 #include <ctime>
 
-vector<PotionRecipe> recipeBook;
 PotionRecipe hpPotion = { "HP Potion", { "Herb", "Clear Water" } };
 PotionRecipe mpPotion = { "MP Potion", { "Herb", "Berry" } };
+vector<PotionRecipe> recipeBook = { hpPotion , mpPotion };
 
-vector<Monster> monsterType;
-Monster slime("Slime", 130, 100, 30, "Slime's Jelly", 7);
-Monster wolf("Wolf", 175, 160, 50, "Wolf's Fur", 23);
-Monster golem("Golem", 300, 210, 100, "Golem's Stone", 74);
+Monster slime("Slime", 12, 130, 100, 30, "Slime's Jelly", 7);
+Monster wolf("Wolf", 48, 175, 160, 50, "Wolf's Fur", 23);
+Monster golem("Golem", 83, 300, 210, 100, "Golem's Stone", 74);
+vector<Monster> monsterType = { slime , wolf , golem };
 
+void setPotions(int defaultPotions, int* p_HpPotion, int* p_MpPotion);
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
 void characterUpgrade(int (*potions)[], const string name, int (*stats)[]);
@@ -37,12 +38,12 @@ int main(void) {
 	{
 		string name = "None";
 		const int statsSize = 4;
-		const int potionsSize = 2;
 
 		//stats[0] = HP, stats[1] = MP, stats[2] = ATK, stats[3] = DEF
 		int stats[statsSize] = { 0 };
 		//potions[0] = HP_Potion, potions[1] = MP_Potion
-		int potions[potionsSize] = { 5, 5 };
+		int potions[2] = { 0 };
+		setPotions(5, &potions[0], &potions[1]);
 
 		setStatus(&name, &stats);
 		printStatus(name, stats);
@@ -52,17 +53,11 @@ int main(void) {
 
 		//select < Job Selection > menu
 		selectJob(&player, name, stats, potions);
-		player->attack();
+		player->getPumped();
 		player->printPlayerStatus();
 		system("pause");
 		system("cls");
 	}
-	recipeBook.push_back(hpPotion);
-	recipeBook.push_back(mpPotion);
-
-	monsterType.push_back(slime);
-	monsterType.push_back(wolf);
-	monsterType.push_back(golem);
 
 	//start Game
 	adventure(player);
@@ -72,6 +67,11 @@ int main(void) {
 }
 
 // Functions
+void setPotions(int defaultPotions, int* p_HpPotion, int* p_MpPotion) {
+	*p_HpPotion = defaultPotions;
+	*p_MpPotion = defaultPotions;
+}
+
 void setStatus(string* name, int (*stats)[]) {
 	cout << "===========================================" << "\n	[Dungeon Escape Text RPG]\n" << "===========================================" << endl;
 	cout << "Enter your hero's name: ";
@@ -142,6 +142,10 @@ void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
+			inputMenu = 9;
+
+			system("pause");
+			system("cls");
 			continue;
 		}
 
@@ -220,6 +224,10 @@ void characterUpgrade(Player* player) {
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
+			inputMenu = 9;
+
+			system("pause");
+			system("cls");
 			continue;
 		}
 
@@ -285,11 +293,11 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 	string userInput = "None";
 	int inputMenu = 0;
 
-	cout << "============================================\n	< Job Selection >\n" << name << ", choose your job!" << endl;
-	cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
-	cout << "============================================" << endl;
-
 	while (!isSelect) {
+		cout << "============================================\n	< Job Selection >\n" << name << ", choose your job!" << endl;
+		cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
+		cout << "============================================" << endl;
+
 		cout << "Choose: ";
 		cin >> userInput;
 		cout << endl;
@@ -299,6 +307,10 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
+			inputMenu = 9;
+
+			system("pause");
+			system("cls");
 			continue;
 		}
 
@@ -321,6 +333,8 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	}
@@ -345,6 +359,10 @@ void potionWorkshop(void) {
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
+			inputMenu = 9;
+
+			system("pause");
+			system("cls");
 			continue;
 		}
 
@@ -480,6 +498,10 @@ void adventure(Player* player) {
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
+			inputMenu = 9;
+
+			system("pause");
+			system("cls");
 			continue;
 		}
 
@@ -488,7 +510,8 @@ void adventure(Player* player) {
 			cout << "The hero returned home after finishing the adventure." << endl << endl;
 			break;
 		case 1:
-			monster.attack(player);
+			player->attack(&monster);
+
 			system("pause");
 			system("cls");
 
@@ -506,6 +529,8 @@ void adventure(Player* player) {
 				}
 				else {
 					cout << "Invalid input. Try again.\n" << endl;
+					inputMenu = 9;
+
 					continue;
 				}
 

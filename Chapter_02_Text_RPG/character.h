@@ -1,7 +1,7 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include "item.h"
+#include "monster.h"
 
 class Player {
 protected:
@@ -9,6 +9,8 @@ protected:
 	string job = "None";
 
 	int level = 1;
+	int exp = 0;
+	int maxExp = 100;
 	//stats[0] = HP, stats[1] = MP, stats[2] = ATK, stats[3] = DEF
 	int stats[4] = { 0 };
 	//potions[0] = HP_Potion, potions[1] = MP_Potion
@@ -34,6 +36,9 @@ public:
 	}
 	void setJob(string newJob) {
 		this->job = newJob;
+	}
+	void setLv(int newLv) {
+		this->level = newLv;
 	}
 	void setHP(int newHP) {
 		this->stats[0] = newHP;
@@ -67,6 +72,9 @@ public:
 	const string getJob(void) {
 		return this->job;
 	}
+	const int getLv(void) {
+		return this->level;
+	}
 	const int getHP(void) {
 		return this->stats[0];
 	}
@@ -89,10 +97,14 @@ public:
 		return this->inventory;
 	}
 
+	//Player Information
 	const void printPlayerStatus(void);
 	const void printInventory(void);
+	//Player Level
+	void gainExp(int expReward);
 
-	virtual void attack() = 0;
+	virtual void getPumped(void) = 0;
+	virtual void attack(Monster* monster) = 0;
 
 	virtual ~Player() {
 		cout << "Exiting the game." << endl;
@@ -101,7 +113,7 @@ public:
 
 const void Player::printPlayerStatus(void) {
 	cout << "===========================================" << endl;
-	cout << "Name: " << this->name << " | Job: " << this->job << " | Lv." << this->level << endl;
+	cout << "Name: " << this->name << " | Job: " << this->job << " | Lv." << this->level << " | Exp: " << this->exp << endl;
 	cout << "HP: " << this->stats[0] << " | MP: " << this->stats[1] << " | Attack: " << this->stats[2] << " | Defence: " << this->stats[3] << endl;
 	cout << "===========================================" << endl;
 
@@ -123,5 +135,23 @@ const void Player::printInventory(void) {
 
 	cout << "===========================================\n" << endl;
 }
+void Player::gainExp(int expReward) {
+	this->exp += expReward;
 
+	if (this->exp >= this->maxExp) {
+		cout << "	=> +" << expReward - (this->exp - this->maxExp) << " EXP! (EXP: " << this->maxExp << "/" << this->maxExp << ")\n\n	=> Level UP! (Lv." << this->level << " => Lv." << (this->level)+1 << ")" << endl;
+		cout << "	=> HP +" << this->stats[0] << ", MP +" << this->stats[1] << ", Attack +" << (this->stats[2])/2 << ", Defence +" << (this->stats[3])/2 << endl;
+
+		for (int i = 0; i < 2; i++) {
+			this->stats[i] *= 2;
+			this->stats[i + 2] += (this->stats[i + 2]) / 2;
+		}
+		this->exp = 0;
+		this->maxExp *= 4 / 3;
+		this->level++;
+	}
+	else {
+		cout << "	=> +" << expReward << " EXP! (EXP: " << this->exp << "/" << this->maxExp << ")" << endl;
+	}
+}
 #endif
