@@ -15,7 +15,7 @@ public:
 	void attack(Monster* monster);
 
 	~Archer(void) {
-		cout << "See you!" << endl;
+		cout << "Thank you for playing!" << endl;
 	}
 };
 
@@ -31,13 +31,17 @@ void Archer::attack(Monster* monster) {
 	int inputMenu = 0;
 	int tempHP = 0;
 
-	cout << "[ Battle Start! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
-	cout << endl;
-
+	system("cls");
 	do {
+		cout << "===========================================" << endl;
+		cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
+		cout << endl;
+		cout << this->getName() << " HP: " << this->getHP() << endl;
+		cout << monster->getName() << " HP: " << monster->getHP() << endl;
+		cout << "===========================================\n" << endl;
 		if (isPlayerTurn) {
-			int playerATK = 0;
 			int randomNum = (rand() % 5);
+			int playerATK = (this->getPower() - monster->getDefence());
 			cout << "-------------- Player's Turn --------------" << endl;
 			cout << "* Choose between attacking and dodging" << endl;
 			cout << "-------------------------------------------\n	< Select Action >" << endl;
@@ -45,14 +49,13 @@ void Archer::attack(Monster* monster) {
 			cout << "-------------------------------------------" << endl;
 			cout << "Choose: ";
 			cin >> userInput;
-			cout << endl;
+			system("cls");
 
 			if (userInput >= "0" && userInput <= "9") {
 				inputMenu = stoi(userInput);
 			}
 			else {
 				do {
-					system("cls");
 					cout << "-------------- Player's Turn --------------" << endl;
 					cout << "* Choose between attacking and dodging" << endl;
 					cout << "-------------------------------------------\n	< Select Action >" << endl;
@@ -60,23 +63,24 @@ void Archer::attack(Monster* monster) {
 					cout << "-------------------------------------------" << endl;
 					cout << "Invalid input. Try again.\n\nChoose: ";
 					cin >> userInput;
+					system("cls");
 				} while (userInput <= "0" || userInput >= "9");
-
 				inputMenu = stoi(userInput);
 			}
-
+			cout << "===========================================" << endl;
+			cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
+			cout << endl;
+			cout << this->getName() << " HP: " << this->getHP() << endl;
+			cout << monster->getName() << " HP: " << monster->getHP() << endl;
+			cout << "===========================================\n" << endl;
 			switch (inputMenu) {
 			case 1:
-				if (this->getPower() - monster->getDefence() < 2) {
+				if (playerATK < 2) {
 					playerATK = 1;
 				}
-				else {
-					playerATK = this->getPower() - monster->getDefence();
-				}
-
+				cout << "-------------- Player's Turn --------------" << endl;
 				this->getPumped();
 				cout << playerATK << " damage to " << monster->getName() << " !" << endl;
-
 				tempHP = monster->getHP();
 				monster->setHP(monster->getHP() - playerATK);
 
@@ -105,15 +109,21 @@ void Archer::attack(Monster* monster) {
 				isPlayerTurn = !isPlayerTurn;
 				break;
 			case 2:
+				if (playerATK < 2) {
+					playerATK = 1;
+				}
 				cout << "* Step back.\n" << endl;
 				if (randomNum > 1) {
+					cout << "-------------- Monster's Turn --------------" << endl;
+					cout << "The " << monster->getName() << " lunged!\n" << endl;
+					cout << "* The " << monster->getName() << "'s attack did not reach.\n" << endl;
 					cout << "* Attack successful!" << endl;
 					cout << "-------------- Player's Turn --------------" << endl;
 					this->getPumped();
-					cout << (playerATK * 4 / 3) << " damage to " << monster->getName() << " !" << endl;
+					cout << (playerATK * 4) / 3 << " damage to " << monster->getName() << " !" << endl;
 
 					tempHP = monster->getHP();
-					monster->setHP(monster->getHP() - (playerATK * 4 / 3));
+					monster->setHP(monster->getHP() - (playerATK * 4) / 3);
 
 					if (monster->getHP() > 0) {
 						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
@@ -200,6 +210,8 @@ void Archer::attack(Monster* monster) {
 			isPlayerTurn = !isPlayerTurn;
 		}
 		cout << endl;
+		system("pause");
+		system("cls");
 	} while (this->getHP() > 0 && monster->getHP() > 0);
 }
 

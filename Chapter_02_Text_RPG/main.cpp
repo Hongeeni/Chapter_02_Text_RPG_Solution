@@ -79,34 +79,34 @@ void setStatus(string* name, int (*stats)[]) {
 
 	cout << endl;
 
-	cout << "(HP and MP input range : 100 ~ 500)\nEnter HP and MP: ";
+	cout << "(HP and MP input range : 100 ~ 250)\nEnter HP and MP: ";
 	cin >> (*stats)[0] >> (*stats)[1];
 	cout << endl;
-	cout << "(Attack and Defence input range : 50 ~ 200)\nEnter Attack and Defence: ";
+	cout << "(Attack and Defence input range : 50 ~ 150)\nEnter Attack and Defence: ";
 	cin >> (*stats)[2] >> (*stats)[3];
 
 	cout << endl;
 
 	// check HP and MP
-	if (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 501 || (*stats)[1] > 501)) {
+	if (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 251 || (*stats)[1] > 251)) {
 		do {
 			cout << "HP or MP is outside The input range. Try again." << endl;
 			cout << "Enter HP and MP: ";
 			cin >> (*stats)[0] >> (*stats)[1];
 
 			cout << endl;
-		} while (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 501 || (*stats)[1] > 501));
+		} while (((*stats)[0] < 99 || (*stats)[1] < 99) || ((*stats)[0] > 251 || (*stats)[1] > 251));
 	}
 
 	// check ATK and DEF
-	if (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 201 || (*stats)[3] > 201)) {
+	if (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 151 || (*stats)[3] > 151)) {
 		do {
 			cout << "Attack or Defense is outside The input range. Try again." << endl;
 			cout << "Enter Attack and Defence: ";
 			cin >> (*stats)[2] >> (*stats)[3];
 
 			cout << endl;
-		} while (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 201 || (*stats)[3] > 201));
+		} while (((*stats)[2] < 49 || (*stats)[3] < 49) || ((*stats)[2] > 151 || (*stats)[3] > 151));
 	}
 }
 
@@ -307,7 +307,6 @@ void selectJob(Player** player, const string name, const int stats[], const int 
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
-			inputMenu = 9;
 
 			system("pause");
 			system("cls");
@@ -368,12 +367,10 @@ void potionWorkshop(void) {
 
 		switch (inputMenu) {
 		case 0:
-			system("pause");
 			system("cls");
 			break;
 		case 1:
 			showAllRecipes();
-			cout << endl;
 			break;
 		case 2:
 			cout << "Search potion name: ";
@@ -399,6 +396,8 @@ void potionWorkshop(void) {
 			break;
 		default:
 			cout << "Invalid input. Try again.\n" << endl;
+			system("pause");
+			system("cls");
 			break;
 		}
 	} while (inputMenu != 0);
@@ -410,6 +409,7 @@ void showAllRecipes(void) {
 		cout << "=> ";
 		recipe.printRecipe();
 	}
+	cout << endl;
 	system("pause");
 	system("cls");
 }
@@ -446,6 +446,7 @@ void searchByName(string potionName) {
 }
 
 void searchByIngredient(string potionIngredient) {
+	bool isSpacing = false;
 	bool isFound = false;
 	string tempIngredient[2] = { "None", "None" };
 
@@ -454,7 +455,16 @@ void searchByIngredient(string potionIngredient) {
 			tempIngredient[x] = recipe.ingredient[x];
 
 			for (int y = 0; y < tempIngredient[x].size(); y++) {
-				(tempIngredient[x])[y] = tolower((tempIngredient[x])[y]);
+				if ((tempIngredient[x])[y] != ' ') {
+					(tempIngredient[x])[y] = tolower((tempIngredient[x])[y]);
+				}
+				else {
+					isSpacing = true;
+				}
+			}
+			if (isSpacing) {
+				remove(tempIngredient[x].begin(), tempIngredient[x].end(), ' ');
+				tempIngredient[x].pop_back();
 			}
 		}
 
@@ -491,7 +501,7 @@ void adventure(Player* player) {
 
 		cout << "Choose: ";
 		cin >> userInput;
-		cout << endl;
+		system("cls");
 
 		if (userInput >= "0" && userInput <= "9") {
 			inputMenu = stoi(userInput);
@@ -507,13 +517,10 @@ void adventure(Player* player) {
 
 		switch (inputMenu) {
 		case 0:
-			cout << "The hero returned home after finishing the adventure." << endl << endl;
+			cout << "\n\nThe hero returned home after finishing the adventure.\n\nExiting the game." << endl << endl;
 			break;
 		case 1:
 			player->attack(&monster);
-
-			system("pause");
-			system("cls");
 
 			if (player->getHP() <= 0) {
 				cout << "* Your HP is very low. You need to rest." << endl;
@@ -523,6 +530,7 @@ void adventure(Player* player) {
 
 				cout << "Choose: ";
 				cin >> userInput;
+				system("cls");
 
 				if (userInput >= "0" && userInput <= "9") {
 					inputMenu = stoi(userInput);
@@ -543,12 +551,13 @@ void adventure(Player* player) {
 					break;
 				default:
 					cout << "Invalid input. Try again.\n" << endl;
+					system("pause");
+					system("cls");
 					break;
 				}
 			}
 			break;
 		case 2:
-			system("cls");
 			characterUpgrade(player);
 			break;
 		case 3:
@@ -557,14 +566,11 @@ void adventure(Player* player) {
 			system("cls");
 			break;
 		case 4:
-			system("cls");
-
 			player->printInventory();
 			system("pause");
 			system("cls");
 			break;
 		case 5:
-			system("cls");
 			potionWorkshop();
 			break;
 		default:

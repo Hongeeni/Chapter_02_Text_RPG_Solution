@@ -107,7 +107,7 @@ public:
 	virtual void attack(Monster* monster) = 0;
 
 	virtual ~Player() {
-		cout << "Exiting the game." << endl;
+		cout << "See you!" << endl;
 	}
 };
 
