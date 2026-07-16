@@ -5,7 +5,7 @@
 
 class Archer : public Player {
 public:
-	Archer(const string name, const int stats[], const int potions[]) : Player(name, stats, potions) {
+	Archer(const string name, const int stats[]) : Player(name, stats) {
 		cout << "* You became a Archer! (HP +30)" << endl;
 		this->job = "Archer";
 		this->stats[0] += 30;
@@ -42,29 +42,30 @@ void Archer::attack(Monster* monster) {
 		if (isPlayerTurn) {
 			int randomNum = (rand() % 5);
 			int playerATK = (this->getPower() - monster->getDefence());
-			cout << "-------------- Player's Turn --------------" << endl;
-			cout << "* Choose between attacking and dodging" << endl;
-			cout << "-------------------------------------------\n	< Select Action >" << endl;
-			cout << "1. Attack the monster\n2. Step back and consecutive attacks." << endl;
+			cout << "-------------- Player's Turn --------------\n" << endl;
+			cout << "1. Attack the monster\n2. Step back and consecutive attacks.\n3. Use item." << endl;
 			cout << "-------------------------------------------" << endl;
 			cout << "Choose: ";
 			cin >> userInput;
 			system("cls");
-
-			if (userInput >= "0" && userInput <= "9") {
+			if (userInput > "0" && userInput <= "4") {
 				inputMenu = stoi(userInput);
 			}
 			else {
 				do {
-					cout << "-------------- Player's Turn --------------" << endl;
-					cout << "* Choose between attacking and dodging" << endl;
-					cout << "-------------------------------------------\n	< Select Action >" << endl;
-					cout << "1. Attack the monster\n2. Step back and consecutive attacks." << endl;
+					cout << "===========================================" << endl;
+					cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
+					cout << endl;
+					cout << this->getName() << " HP: " << this->getHP() << endl;
+					cout << monster->getName() << " HP: " << monster->getHP() << endl;
+					cout << "===========================================\n" << endl;
+					cout << "-------------- Player's Turn --------------\n" << endl;
+					cout << "1. Attack the monster\n2. Step back and consecutive attacks.\n3. Use item." << endl;
 					cout << "-------------------------------------------" << endl;
 					cout << "Invalid input. Try again.\n\nChoose: ";
 					cin >> userInput;
 					system("cls");
-				} while (userInput <= "0" || userInput >= "9");
+				} while (userInput <= "0" || userInput >= "4");
 				inputMenu = stoi(userInput);
 			}
 			cout << "===========================================" << endl;
@@ -88,18 +89,16 @@ void Archer::attack(Monster* monster) {
 					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
 				}
 				else {
-					Item item;
-					item.name = monster->getDropItemName();
-					item.price = monster->getDropItemPrice();
+					Item item = { monster->getDropItemName(), 1, monster->getDropItemPrice() };
 
 					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
 					cout << "* Victory!" << endl;
-
 					this->gainExp(monster->getExp());
-					cout << "\n	=> Got: " << monster->getDropItemName() << "!" << endl;
+					cout << "\n	=> Got: " << item.name << "!" << endl;
 
 					if (this->getInventory().size() < 10) {
-						this->pushItem(item);
+						int tempNumOfItem = this->getInventoryItem(item).numOfItems;
+						this->setInventoryItem(item, tempNumOfItem + 1);
 						cout << "	=> Saved to inventory." << endl;
 					}
 					else {
@@ -129,18 +128,16 @@ void Archer::attack(Monster* monster) {
 						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
 					}
 					else {
-						Item item;
-						item.name = monster->getDropItemName();
-						item.price = monster->getDropItemPrice();
+						Item item = { monster->getDropItemName(), 1, monster->getDropItemPrice() };
 
 						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
 						cout << "* Victory!" << endl;
-
 						this->gainExp(monster->getExp());
-						cout << "\n	=> Got: " << monster->getDropItemName() << "!" << endl;
+						cout << "\n	=> Got: " << item.name << "!" << endl;
 
 						if (this->getInventory().size() < 10) {
-							this->pushItem(item);
+							int tempNumOfItem = this->getInventoryItem(item).numOfItems;
+							this->setInventoryItem(item, tempNumOfItem + 1);
 							cout << "	=> Saved to inventory." << endl;
 						}
 						else {
@@ -176,8 +173,8 @@ void Archer::attack(Monster* monster) {
 					}
 				}
 				break;
-			default:
-				cout << "Invalid input. Try again.\n" << endl;
+			case 3:
+				this->useItem();
 				break;
 			}
 		}
