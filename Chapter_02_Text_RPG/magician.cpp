@@ -30,8 +30,8 @@ void Magician::attack(Monster* monster) {
 		cout << "===========================================" << endl;
 		cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 		cout << endl;
-		cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
-		cout << monster->getName() << " HP: " << monster->getHP() << endl;
+		this->printPlayerCondition();
+		monster->printMonsterCondition();
 		cout << "===========================================\n" << endl;
 		if (isPlayerTurn) {
 			int randomNum = (rand() % 5);
@@ -50,8 +50,8 @@ void Magician::attack(Monster* monster) {
 					cout << "===========================================" << endl;
 					cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 					cout << endl;
-					cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
-					cout << monster->getName() << " HP: " << monster->getHP() << endl;
+					this->printPlayerCondition();
+					monster->printMonsterCondition();
 					cout << "===========================================\n" << endl;
 					cout << "-------------- Player's Turn --------------\n" << endl;
 					cout << "1. Attack the monster\n2. Uses a defensive spell.\n3. Use item." << endl;
@@ -65,8 +65,8 @@ void Magician::attack(Monster* monster) {
 			cout << "===========================================" << endl;
 			cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 			cout << endl;
-			cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
-			cout << monster->getName() << " HP: " << monster->getHP() << endl;
+			this->printPlayerCondition();
+			monster->printMonsterCondition();
 			cout << "===========================================\n" << endl;
 			switch (inputMenu) {
 			case 1:
@@ -76,16 +76,16 @@ void Magician::attack(Monster* monster) {
 				cout << "-------------- Player's Turn --------------" << endl;
 				this->getPumped();
 				cout << playerATK << " damage to " << monster->getName() << " !" << endl;
-				tempHP = monster->getHP();
-				monster->setHP(monster->getHP() - playerATK);
+				tempHP = monster->getCurrentHP();
+				monster->setCurrentHP(monster->getCurrentHP() - playerATK);
 				this->setCurrentMP(this->getCurrentMP() - this->getDefAttackCost());
-				if (monster->getHP() > 0) {
-					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
+				if (monster->getCurrentHP() > 0) {
+					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getCurrentHP() << endl;
 				}
 				else {
 					Item item = { monster->getDropItemName(), 1, monster->getDropItemPrice() };
 
-					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
+					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getCurrentHP() << " (Dead)\n" << endl;
 					cout << "* Victory!" << endl;
 					this->gainExp(monster->getExp());
 					cout << "\n	=> Got: " << item.name << "!" << endl;
@@ -123,16 +123,16 @@ void Magician::attack(Monster* monster) {
 					this->getPumped();
 					cout << playerATK << " damage to " << monster->getName() << " !" << endl;
 
-					tempHP = monster->getHP();
-					monster->setHP(monster->getHP() - playerATK);
+					tempHP = monster->getCurrentHP();
+					monster->setCurrentHP(monster->getCurrentHP() - playerATK);
 
-					if (monster->getHP() > 0) {
-						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
+					if (monster->getCurrentHP() > 0) {
+						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getCurrentHP() << endl;
 					}
 					else {
 						Item item = { monster->getDropItemName(), 1, monster->getDropItemPrice() };
 
-						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << " (Dead)\n" << endl;
+						cout << monster->getName() << " HP: " << tempHP << " => " << monster->getCurrentHP() << " (Dead)\n" << endl;
 						cout << "* Victory!" << endl;
 						this->gainExp(monster->getExp());
 						cout << "\n	=> Got: " << item.name << "!" << endl;
@@ -210,5 +210,5 @@ void Magician::attack(Monster* monster) {
 		cout << endl;
 		system("pause");
 		system("cls");
-	} while (this->getCurrentHP() > 0 && monster->getHP() > 0);
+	} while (this->getCurrentHP() > 0 && monster->getCurrentHP() > 0);
 }

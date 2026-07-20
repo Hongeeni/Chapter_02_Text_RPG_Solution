@@ -99,6 +99,9 @@ const void Player::printPlayerStatus(void) {
 
 	cout << endl;
 }
+const void Player::printPlayerCondition(void) {
+	cout << this->getName() << " HP: " << this->getCurrentHP() << "/" << this->getMaxHP() << " MP: " << this->getCurrentMP() << "/" << this->getMaxMP() << endl;
+}
 const void Player::printInventory(void) {
 	for (int i = 0; i < this->inventory.size(); i++) {
 		if (this->inventory[i].numOfItems == 0) {

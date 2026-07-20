@@ -1,7 +1,7 @@
 #include "monster.h"
 
 Monster::Monster(string inputName, int inputExp, int inputHP, int inputPower, int inputDefence, string inputDropItemName, int inputDropItemPrice)
-	: name(inputName), expReward(inputExp), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
+	: name(inputName), expReward(inputExp), maxHP(inputHP), currentHP(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
 
 //setter
 void Monster::setName(string newName) {
@@ -10,8 +10,11 @@ void Monster::setName(string newName) {
 void Monster::setExp(int newExp) {
 	this->expReward = newExp;
 }
-void Monster::setHP(int newHP) {
-	this->hp = newHP;
+void Monster::setMaxHP(int newMaxHP) {
+	this->maxHP = newMaxHP;
+}
+void Monster::setCurrentHP(int newCurrentHP) {
+	this->currentHP = newCurrentHP;
 }
 void Monster::setPower(int newPower) {
 	this->power = newPower;
@@ -33,8 +36,11 @@ const string Monster::getName(void) {
 const int Monster::getExp(void) {
 	return expReward;
 }
-const int Monster::getHP(void) {
-	return hp;
+const int Monster::getMaxHP(void) {
+	return maxHP;
+}
+const int Monster::getCurrentHP(void) {
+	return currentHP;
 }
 const int Monster::getPower(void) {
 	return power;
@@ -47,4 +53,8 @@ const string Monster::getDropItemName(void) {
 }
 const int Monster::getDropItemPrice(void) {
 	return dropItemPrice;
+}
+
+const void Monster::printMonsterCondition(void) {
+	cout << this->getName() << " HP: " << this->getCurrentHP() << "/" << this->getMaxHP() << endl;
 }

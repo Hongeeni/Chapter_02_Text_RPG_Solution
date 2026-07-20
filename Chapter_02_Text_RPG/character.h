@@ -53,6 +53,7 @@ public:
 
 	//Player Information
 	const void printPlayerStatus(void);
+	const void printPlayerCondition(void);
 	const void printInventory(void);
 	//Player Inventory
 	void useItem(void);
