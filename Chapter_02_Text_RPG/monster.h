@@ -19,50 +19,22 @@ public:
 		: name(inputName),expReward(inputExp), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
 
 	//setter
-	void setName(string newName) {
-		this->name = newName;
-	}
-	void setExp(int newExp) {
-		this->expReward = newExp;
-	}
-	void setHP(int newHP) {
-		this->hp = newHP;
-	}
-	void setPower(int newPower) {
-		this->power = newPower;
-	}
-	void setDefence(int newDefence) {
-		this->defence = newDefence;
-	}
-	void setDropItemName(string newDropItemName) {
-		this->dropItemName = newDropItemName;
-	}
-	void setDropItemPrice(int newDropItemPrice) {
-		this->dropItemPrice = newDropItemPrice;
-	}
+	void setName(string newName);
+	void setExp(int newExp);
+	void setHP(int newHP);
+	void setPower(int newPower);
+	void setDefence(int newDefence);
+	void setDropItemName(string newDropItemName);
+	void setDropItemPrice(int newDropItemPrice);
 
 	//getter
-	const string getName(void) {
-		return name;
-	}
-	const int getExp(void) {
-		return expReward;
-	}
-	const int getHP(void) {
-		return hp;
-	}
-	const int getPower(void) {
-		return power;
-	}
-	const int getDefence(void) {
-		return defence;
-	}
-	const string getDropItemName(void) {
-		return dropItemName;
-	}
-	const int getDropItemPrice(void) {
-		return dropItemPrice;
-	}
+	const string getName(void);
+	const int getExp(void);
+	const int getHP(void);
+	const int getPower(void);
+	const int getDefence(void);
+	const string getDropItemName(void);
+	const int getDropItemPrice(void);
 
 	~Monster() {}
 };
