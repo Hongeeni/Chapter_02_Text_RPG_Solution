@@ -15,8 +15,7 @@ protected:
 	int dropItemPrice = 0;
 
 public:
-	Monster(string inputName = "Ghost",int inputExp = 10, int inputHP = 100, int inputPower = 100, int inputDefence = 10, string inputDropItemName = "Fragment of The Soul", int inputDropItemPrice = 5)
-		: name(inputName),expReward(inputExp), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
+	Monster(string inputName = "Ghost", int inputExp = 10, int inputHP = 100, int inputPower = 100, int inputDefence = 10, string inputDropItemName = "Fragment of The Soul", int inputDropItemPrice = 5);
 
 	//setter
 	void setName(string newName);

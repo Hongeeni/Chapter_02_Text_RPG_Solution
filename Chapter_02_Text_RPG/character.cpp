@@ -49,7 +49,7 @@ void Player::pushItem(Item item) {
 void Player::popItem(Item item) {
 	this->inventory.pop_back();
 }
-void Player::setPotions(int defaultPotions = 5) {
+void Player::setPotions(int defaultPotions) {
 	Item hpPotion = { "HP Potion", defaultPotions, 50 };
 	Item mpPotion = { "MP Potion", defaultPotions, 50 };
 	this->inventory.push_back(hpPotion);
@@ -204,28 +204,22 @@ void Player::setInventoryItem(Item item, int numberOfItems) {
 	}
 }
 const Item Player::getInventoryItem(string itemName) {
-	bool isItem = false;
 	for (int i = 0; i < this->inventory.size(); i++) {
 		if (this->inventory[i].name == itemName) {
 			return this->inventory[i];
 		}
 	}
-	if (!isItem) {
-		Item item;
-		return item;
-	}
+	Item item;
+	return item;
 }
-const Item Player::getInventoryItem(Item item) {
-	bool isItem = false;
+const Item Player::getInventoryItem(Item itemObject) {
 	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == item.name) {
+		if (this->inventory[i].name == itemObject.name) {
 			return this->inventory[i];
 		}
 	}
-	if (!isItem) {
-		Item item;
-		return item;
-	}
+	Item item;
+	return item;
 }
 void Player::gainExp(int expReward) {
 	this->exp += expReward;

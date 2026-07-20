@@ -61,7 +61,7 @@ public:
 	void setInventoryItem(string itemName, int numberOfItems);
 	void setInventoryItem(Item item, int numberOfItems);
 	const Item getInventoryItem(string itemName);
-	const Item getInventoryItem(Item item);
+	const Item getInventoryItem(Item itemObject);
 	//Player Level
 	void gainExp(int expReward);
 

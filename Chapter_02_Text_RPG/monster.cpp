@@ -1,5 +1,8 @@
 #include "monster.h"
 
+Monster::Monster(string inputName, int inputExp, int inputHP, int inputPower, int inputDefence, string inputDropItemName, int inputDropItemPrice)
+	: name(inputName), expReward(inputExp), hp(inputHP), power(inputPower), defence(inputDefence), dropItemName(inputDropItemName), dropItemPrice(inputDropItemPrice) {}
+
 //setter
 void Monster::setName(string newName) {
 	this->name = newName;
