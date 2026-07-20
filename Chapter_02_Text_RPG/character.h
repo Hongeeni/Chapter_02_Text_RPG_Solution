@@ -11,6 +11,9 @@ protected:
 	int level = 1;
 	int exp = 0;
 	int maxExp = 100;
+	int currentHP = 100;
+	int currentMP = 100;
+	int defAttackCost = 7;
 	//stats[0] = maxHP, stats[1] = maxMP, stats[2] = ATK, stats[3] = DEF
 	int stats[4] = { 0 };
 
@@ -20,6 +23,8 @@ protected:
 public:
 	Player(const string name, const int stats[]) {
 		this->name = name;
+		this->currentHP = stats[0];	// currentHP
+		this->currentMP = stats[1];	// currentMP
 		this->stats[0] = stats[0];	// maxHP
 		this->stats[1] = stats[1];	// maxMP
 		this->stats[2] = stats[2];	// ATK
@@ -37,10 +42,19 @@ public:
 	void setLv(int newLv) {
 		this->level = newLv;
 	}
-	void setHP(int newHP) {
+	void setCurrentHP(int newHP) {
+		this->currentHP = newHP;
+	}
+	void setCurrentMP(int newMP) {
+		this->currentMP = newMP;
+	}
+	void setDefAttackCost(int cost) {
+		this->defAttackCost = cost;
+	}
+	void setMaxHP(int newHP) {
 		this->stats[0] = newHP;
 	}
-	void setMP(int newMP) {
+	void setMaxMP(int newMP) {
 		this->stats[1] = newMP;
 	}
 	void setPower(int newPower) {
@@ -72,10 +86,19 @@ public:
 	const int getLv(void) {
 		return this->level;
 	}
-	const int getHP(void) {
+	const int getCurrentHP(void) {
+		return this->currentHP;
+	}
+	const int getCurrentMP(void) {
+		return this->currentMP;
+	}
+	const int getDefAttackCost(void) {
+		return this->defAttackCost;
+	}
+	const int getMaxHP(void) {
 		return this->stats[0];
 	}
-	const int getMP(void) {
+	const int getMaxMP(void) {
 		return this->stats[1];
 	}
 	const int getPower(void) {
@@ -112,8 +135,8 @@ public:
 
 const void Player::printPlayerStatus(void) {
 	cout << "===========================================" << endl;
-	cout << "Name: " << this->name << " | Job: " << this->job << " | Lv." << this->level << " | Exp: " << this->exp << endl;
-	cout << "HP: " << this->stats[0] << " | MP: " << this->stats[1] << " | Attack: " << this->stats[2] << " | Defence: " << this->stats[3] << endl;
+	cout << "Name: " << this->name << " | Job: " << this->job << "\nLv." << this->level << " | Exp: " << this->exp << " / " << this->maxExp << endl;
+	cout << "HP: " << this->currentHP << " / " << this->stats[0] << " | MP: " << this->currentMP << " / " << this->stats[1] << "\nAttack: " << this->stats[2] << " | Defence: " << this->stats[3] << endl;
 	cout << "===========================================" << endl;
 
 	cout << endl;
@@ -161,12 +184,12 @@ void Player::useItem(void) {
 		if (inputItem >= 0 && inputItem < this->inventory.size()) {
 			if (this->inventory[inputItem].name == "HP Potion") {
 				this->setInventoryItem("HP Potion", (this->getInventoryItem("HP Potion").numOfItems - 1));
-				this->setHP(this->getHP() + 20);
+				this->setCurrentHP(this->getCurrentHP() + 20);
 				cout << "* HP increased by 20. (HP Potion used: " << this->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
 			}
 			else if (this->inventory[inputItem].name == "MP Potion") {
 				this->setInventoryItem("MP Potion", (this->getInventoryItem("MP Potion").numOfItems - 1));
-				this->setMP(this->getMP() + 20);
+				this->setCurrentMP(this->getCurrentMP() + 20);
 				cout << "* MP increased by 20. (MP Potion used: " << this->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
 			}
 			else {
@@ -251,18 +274,21 @@ void Player::gainExp(int expReward) {
 
 	if (this->exp >= this->maxExp) {
 		cout << "	=> +" << expReward - (this->exp - this->maxExp) << " EXP! (EXP: " << this->maxExp << "/" << this->maxExp << ")\n\n	=> Level UP! (Lv." << this->level << " => Lv." << (this->level)+1 << ")" << endl;
-		cout << "	=> HP +" << this->stats[0] << ", MP +" << this->stats[1] << ", Attack +" << (this->stats[2])/2 << ", Defence +" << (this->stats[3])/2 << endl;
+		cout << "	=> HP +" << this->stats[0]/2 << ", MP +" << this->stats[1]/2 << ", Attack +" << (this->stats[2])/4 << ", Defence +" << (this->stats[3])/4 << endl;
 
 		for (int i = 0; i < 2; i++) {
-			this->stats[i] *= 2;
-			this->stats[i + 2] += (this->stats[i + 2]) / 2;
+			this->stats[i] += this->stats[i] / 3;
+			this->stats[i + 2] += (this->stats[i + 2]) / 5;
 		}
+		this->currentHP = this->stats[0];
+		this->currentMP = this->stats[1];
 		this->exp = 0;
-		this->maxExp *= 4 / 3;
+		this->maxExp = (maxExp * 4) / 3;
 		this->level++;
 	}
 	else {
 		cout << "	=> +" << expReward << " EXP! (EXP: " << this->exp << "/" << this->maxExp << ")" << endl;
 	}
 }
+
 #endif

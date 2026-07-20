@@ -4,12 +4,20 @@
 #include "character.h"
 
 class Magician : public Player {
+private:
+	int specialAttackCost = 12;
+
 public:
 	Magician(const string name, const int stats[]) : Player(name, stats) {
 		cout << "* You became a Mage! (MP +30)" << endl;
 		this->job = "Mage";
 		this->stats[1] += 30;
+		this->currentMP = this->stats[1];
 	}
+	//setter
+	const void setSpecialAttackCost(int cost);
+	//getter
+	int getSpecialAttackCost(void);
 
 	void getPumped(void);
 	void attack(Monster* monster);
@@ -20,6 +28,13 @@ public:
 };
 
 //Functions
+const void Magician::setSpecialAttackCost(int cost) {
+	this->specialAttackCost = cost;
+}
+int Magician::getSpecialAttackCost(void) {
+	return this->specialAttackCost;
+}
+
 void Magician::getPumped(void) {
 	cout << "* Fires fireball!" << endl;
 }
@@ -36,7 +51,7 @@ void Magician::attack(Monster* monster) {
 		cout << "===========================================" << endl;
 		cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 		cout << endl;
-		cout << this->getName() << " HP: " << this->getHP() << endl;
+		cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 		cout << monster->getName() << " HP: " << monster->getHP() << endl;
 		cout << "===========================================\n" << endl;
 		if (isPlayerTurn) {
@@ -56,7 +71,7 @@ void Magician::attack(Monster* monster) {
 					cout << "===========================================" << endl;
 					cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 					cout << endl;
-					cout << this->getName() << " HP: " << this->getHP() << endl;
+					cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 					cout << monster->getName() << " HP: " << monster->getHP() << endl;
 					cout << "===========================================\n" << endl;
 					cout << "-------------- Player's Turn --------------\n" << endl;
@@ -71,7 +86,7 @@ void Magician::attack(Monster* monster) {
 			cout << "===========================================" << endl;
 			cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 			cout << endl;
-			cout << this->getName() << " HP: " << this->getHP() << endl;
+			cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 			cout << monster->getName() << " HP: " << monster->getHP() << endl;
 			cout << "===========================================\n" << endl;
 			switch (inputMenu) {
@@ -84,7 +99,7 @@ void Magician::attack(Monster* monster) {
 				cout << playerATK << " damage to " << monster->getName() << " !" << endl;
 				tempHP = monster->getHP();
 				monster->setHP(monster->getHP() - playerATK);
-
+				this->setCurrentMP(this->getCurrentMP() - this->getDefAttackCost());
 				if (monster->getHP() > 0) {
 					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
 				}
@@ -112,6 +127,7 @@ void Magician::attack(Monster* monster) {
 					playerATK = 1;
 				}
 				cout << "* Used a defensive spell.\n" << endl;
+				this->setCurrentMP(this->getCurrentMP() - this->getSpecialAttackCost());
 				if (randomNum > 1) {
 					cout << "-------------- Monster's Turn --------------" << endl;
 					cout << "The " << monster->getName() << " lunged!\n" << endl;
@@ -166,17 +182,17 @@ void Magician::attack(Monster* monster) {
 					}
 					cout << monsterATK << " damage to " << this->getName() << " !" << endl;
 
-					tempHP = this->getHP();
-					this->setHP(this->getHP() - monsterATK);
+					tempHP = this->getCurrentHP();
+					this->setCurrentHP(this->getCurrentHP() - monsterATK);
 
-					if (this->getHP() > 0) {
-						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
+					if (this->getCurrentHP() > 0) {
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << endl;
 					}
 					else {
-						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << " (Dead)\n" << endl;
 						cout << "* The End..." << endl;
 
-						this->setHP(0);
+						this->setCurrentHP(0);
 					}
 				}
 				break;
@@ -198,24 +214,24 @@ void Magician::attack(Monster* monster) {
 			}
 			cout << monsterATK << " damage to " << this->getName() << " !" << endl;
 
-			tempHP = this->getHP();
-			this->setHP(this->getHP() - monsterATK);
+			tempHP = this->getCurrentHP();
+			this->setCurrentHP(this->getCurrentHP() - monsterATK);
 
-			if (this->getHP() > 0) {
-				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
+			if (this->getCurrentHP() > 0) {
+				cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << endl;
 			}
 			else {
-				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
+				cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << " (Dead)\n" << endl;
 				cout << "* The End..." << endl;
 
-				this->setHP(0);
+				this->setCurrentHP(0);
 			}
 			isPlayerTurn = !isPlayerTurn;
 		}
 		cout << endl;
 		system("pause");
 		system("cls");
-	} while (this->getHP() > 0 && monster->getHP() > 0);
+	} while (this->getCurrentHP() > 0 && monster->getHP() > 0);
 }
 
 #endif

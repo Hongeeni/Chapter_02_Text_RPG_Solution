@@ -211,7 +211,7 @@ void restTent(Player* player) {
 		cin >> userInput;
 		cout << endl;
 
-		if (userInput >= "0" && userInput <= "9") {
+		if (userInput >= "0" && userInput < "4") {
 			inputMenu = stoi(userInput);
 		}
 		else {
@@ -232,7 +232,7 @@ void restTent(Player* player) {
 		case 1:
 			if (player->getInventoryItem("HP Potion").numOfItems > 0) {
 				player->setInventoryItem("HP Potion", (player->getInventoryItem("HP Potion").numOfItems - 1));
-				player->setHP(player->getHP() + 20);
+				player->setCurrentHP(player->getCurrentHP() + 20);
 				cout << "* HP increased by 20. (HP Potion used: " << player->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
 			}
 			else {
@@ -244,7 +244,7 @@ void restTent(Player* player) {
 		case 2:
 			if (player->getInventoryItem("MP Potion").numOfItems > 0) {
 				player->setInventoryItem("MP Potion", (player->getInventoryItem("MP Potion").numOfItems - 1));
-				player->setMP(player->getMP() + 20);
+				player->setCurrentMP(player->getCurrentMP() + 20);
 				cout << "* MP increased by 20. (MP Potion used: " << player->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
 			}
 			else {
@@ -255,11 +255,6 @@ void restTent(Player* player) {
 			break;
 		case 3:
 			player->printPlayerStatus();
-			system("pause");
-			system("cls");
-			break;
-		default:
-			cout << "Invalid input. Try again.\n" << endl;
 			system("pause");
 			system("cls");
 			break;
@@ -477,7 +472,6 @@ void adventure(Player* player) {
 		cout << "1. Adventure!	2. Rest	3. Status" << endl;
 		cout << "4. Inventory	5. Potion Shop	0. Exit Game" << endl;
 		cout << "============================================" << endl;
-
 		cout << "Choose: ";
 		cin >> userInput;
 
@@ -500,24 +494,30 @@ void adventure(Player* player) {
 		case 1:
 			player->attack(&monster);
 
-			if (player->getHP() <= 0) {
+			if (player->getCurrentHP() <= 0) {
 				cout << "* Your HP is very low. You need to rest." << endl;
 				cout << "============================================\n	< Select Action >" << endl;
-				cout << "1. Rest	0. Exit Game" << endl;
+				cout << "1. Rest			0. Exit Game" << endl;
 				cout << "============================================\n" << endl;
-
 				cout << "Choose: ";
 				cin >> userInput;
 				system("cls");
 
-				if (userInput >= "0" && userInput <= "9") {
+				if (userInput >= "0" && userInput < "2") {
 					inputMenu = stoi(userInput);
 				}
 				else {
-					cout << "Invalid input. Try again.\n" << endl;
-					inputMenu = 9;
-
-					continue;
+					do {
+						cout << "* Your HP is very low. You need to rest." << endl;
+						cout << "============================================\n	< Select Action >" << endl;
+						cout << "1. Rest			0. Exit Game" << endl;
+						cout << "============================================" << endl;
+						cout << "Invalid input. Try again.\n" << endl;
+						cout << "Choose: ";
+						cin >> userInput;
+						system("cls");
+					} while (userInput < "0" || userInput > "1");
+					inputMenu = stoi(userInput);
 				}
 
 				switch (inputMenu) {
@@ -526,11 +526,6 @@ void adventure(Player* player) {
 					break;
 				case 1:
 					restTent(player);
-					break;
-				default:
-					cout << "Invalid input. Try again.\n" << endl;
-					system("pause");
-					system("cls");
 					break;
 				}
 			}

@@ -4,12 +4,18 @@
 #include "character.h"
 
 class Thief : public Player {
+	int specialAttackCost = 13;
+
 public:
 	Thief(const string name, const int stats[]) : Player(name, stats) {
 		cout << "* You became a Rogue! (Attack +30)" << endl;
 		this->job = "Rogue";
 		this->stats[2] += 30;
 	}
+	//setter
+	const void setSpecialAttackCost(int cost);
+	//getter
+	int getSpecialAttackCost(void);
 
 	void getPumped(void);
 	void attack(Monster* monster);
@@ -20,6 +26,13 @@ public:
 };
 
 //Functions
+const void Thief::setSpecialAttackCost(int cost) {
+	this->specialAttackCost = cost;
+}
+int Thief::getSpecialAttackCost(void) {
+	return this->specialAttackCost;
+}
+
 void Thief::getPumped(void) {
 	cout << "* Stabs dagger!" << endl;
 }
@@ -36,7 +49,7 @@ void Thief::attack(Monster* monster) {
 		cout << "===========================================" << endl;
 		cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 		cout << endl;
-		cout << this->getName() << " HP: " << this->getHP() << endl;
+		cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 		cout << monster->getName() << " HP: " << monster->getHP() << endl;
 		cout << "===========================================\n" << endl;
 		if (isPlayerTurn) {
@@ -56,7 +69,7 @@ void Thief::attack(Monster* monster) {
 					cout << "===========================================" << endl;
 					cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 					cout << endl;
-					cout << this->getName() << " HP: " << this->getHP() << endl;
+					cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 					cout << monster->getName() << " HP: " << monster->getHP() << endl;
 					cout << "===========================================\n" << endl;
 					cout << "-------------- Player's Turn --------------\n" << endl;
@@ -71,7 +84,7 @@ void Thief::attack(Monster* monster) {
 			cout << "===========================================" << endl;
 			cout << "[ Battle! ] " << this->getName() << "(" << this->getJob() << ") VS " << monster->getName() << endl;
 			cout << endl;
-			cout << this->getName() << " HP: " << this->getHP() << endl;
+			cout << this->getName() << " HP: " << this->getCurrentHP() << " MP: " << this->getCurrentMP() << endl;
 			cout << monster->getName() << " HP: " << monster->getHP() << endl;
 			cout << "===========================================\n" << endl;
 			switch (inputMenu) {
@@ -84,7 +97,7 @@ void Thief::attack(Monster* monster) {
 				cout << playerATK << " damage to " << monster->getName() << " !" << endl;
 				tempHP = monster->getHP();
 				monster->setHP(monster->getHP() - playerATK);
-
+				this->setCurrentMP(this->getCurrentMP() - this->getDefAttackCost());
 				if (monster->getHP() > 0) {
 					cout << monster->getName() << " HP: " << tempHP << " => " << monster->getHP() << endl;
 				}
@@ -112,6 +125,7 @@ void Thief::attack(Monster* monster) {
 					playerATK = 1;
 				}
 				cout << "* Disappeared into the bushes.\n" << endl;
+				this->setCurrentMP(this->getCurrentMP() - this->getSpecialAttackCost());
 				if (randomNum) {
 					cout << "-------------- Monster's Turn --------------" << endl;
 					cout << "The " << monster->getName() << " didn't find you.\n" << endl;
@@ -158,17 +172,17 @@ void Thief::attack(Monster* monster) {
 					}
 					cout << monsterATK << " damage to " << this->getName() << " !" << endl;
 
-					tempHP = this->getHP();
-					this->setHP(this->getHP() - monsterATK);
+					tempHP = this->getCurrentHP();
+					this->setCurrentHP(this->getCurrentHP() - monsterATK);
 
-					if (this->getHP() > 0) {
-						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
+					if (this->getCurrentHP() > 0) {
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << endl;
 					}
 					else {
-						cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
+						cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << " (Dead)\n" << endl;
 						cout << "* The End..." << endl;
 
-						this->setHP(0);
+						this->setCurrentHP(0);
 					}
 				}
 				break;
@@ -190,17 +204,17 @@ void Thief::attack(Monster* monster) {
 			}
 			cout << monsterATK << " damage to " << this->getName() << " !" << endl;
 
-			tempHP = this->getHP();
-			this->setHP(this->getHP() - monsterATK);
+			tempHP = this->getCurrentHP();
+			this->setCurrentHP(this->getCurrentHP() - monsterATK);
 
-			if (this->getHP() > 0) {
-				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << endl;
+			if (this->getCurrentHP() > 0) {
+				cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << endl;
 			}
 			else {
-				cout << this->getName() << " HP: " << tempHP << " => " << this->getHP() << " (Dead)\n" << endl;
+				cout << this->getName() << " HP: " << tempHP << " => " << this->getCurrentHP() << " (Dead)\n" << endl;
 				cout << "* The End..." << endl;
 
-				this->setHP(0);
+				this->setCurrentHP(0);
 			}
 
 			isPlayerTurn = !isPlayerTurn;
@@ -208,7 +222,7 @@ void Thief::attack(Monster* monster) {
 		cout << endl;
 		system("pause");
 		system("cls");
-	} while (this->getHP() > 0 && monster->getHP() > 0);
+	} while (this->getCurrentHP() > 0 && monster->getHP() > 0);
 }
 
 #endif
