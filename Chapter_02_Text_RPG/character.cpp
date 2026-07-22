@@ -8,7 +8,8 @@ Player::Player(const string name, const int stats[]) {
 	this->stats[1] = stats[1];	// maxMP
 	this->stats[2] = stats[2];	// ATK
 	this->stats[3] = stats[3];	// DEF
-	setPotions();				// Hp and Mp potions
+
+	this->inventory = new Inventory<Item>;
 }
 
 
@@ -43,18 +44,6 @@ void Player::setPower(int newPower) {
 void Player::setDefence(int newDefence) {
 	this->stats[3] = newDefence;
 }
-void Player::pushItem(Item item) {
-	this->inventory.push_back(item);
-}
-void Player::popItem(Item item) {
-	this->inventory.pop_back();
-}
-void Player::setPotions(int defaultPotions) {
-	Item hpPotion = { "HP Potion", defaultPotions, 50 };
-	Item mpPotion = { "MP Potion", defaultPotions, 50 };
-	this->inventory.push_back(hpPotion);
-	this->inventory.push_back(mpPotion);
-}
 
 //getter
 const string Player::getName(void) {
@@ -87,9 +76,6 @@ const int Player::getPower(void) {
 const int Player::getDefence(void) {
 	return this->stats[3];
 }
-const vector<Item> Player::getInventory(void) {
-	return this->inventory;
-}
 
 const void Player::printPlayerStatus(void) {
 	cout << "===========================================" << endl;
@@ -102,31 +88,13 @@ const void Player::printPlayerStatus(void) {
 const void Player::printPlayerCondition(void) {
 	cout << this->getName() << " HP: " << this->getCurrentHP() << "/" << this->getMaxHP() << " MP: " << this->getCurrentMP() << "/" << this->getMaxMP() << endl;
 }
-const void Player::printInventory(void) {
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].numOfItems == 0) {
-			this->inventoryItemDelete(this->inventory[i]);
-		}
-	}
 
-	cout << "===========================================\n	[ " << this->name << "'s Inventory " << this->inventory.size() << "/10 ]\n===========================================" << endl;
-	for (int i = 0; i < 10; i++) {
-		if (i < this->inventory.size()) {
-			cout << (i + 1) << ". ";
-			this->inventory[i].printInfo();
-		}
-		else {
-			cout << (i + 1) << ". Empty" << endl;
-		}
-	}
-	cout << "===========================================\n" << endl;
-}
 void Player::useItem(void) {
 	string userInput = "None";
 	int inputItem = 0;
 
 	do {
-		this->printInventory();
+		this->inventory->printInventory(this->getName());
 		cout << "Choose Item Number: ";
 		cin >> userInput;
 		cout << endl;
@@ -142,16 +110,36 @@ void Player::useItem(void) {
 			continue;
 		}
 
-		if (inputItem >= 0 && inputItem < this->inventory.size()) {
-			if (this->inventory[inputItem].name == "HP Potion") {
-				this->setInventoryItem("HP Potion", (this->getInventoryItem("HP Potion").numOfItems - 1));
-				this->setCurrentHP(this->getCurrentHP() + 20);
-				cout << "* HP increased by 20. (HP Potion used: " << this->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
+		if (inputItem >= 0 && inputItem < this->inventory->getInventorySize()) {
+			if (this->inventory->checkIndexItem(inputItem, "HP Potion")) {
+				if (this->getCurrentHP() < this->getMaxHP()) {
+					this->inventory->setInventoryItem("HP Potion", (this->inventory->getInventoryItem("HP Potion").numOfItems - 1));
+					if ((this->getCurrentHP() + 20) < this->getMaxHP()) {
+						this->setCurrentHP(this->getCurrentHP() + 20);
+					}
+					else {
+						this->setCurrentHP(this->getMaxHP());
+					}
+					cout << "* HP increased by 20. (HP Potion used: " << this->inventory->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
+				}
+				else {
+					cout << "* Recovery is already complete.\n" << endl;
+				}
 			}
-			else if (this->inventory[inputItem].name == "MP Potion") {
-				this->setInventoryItem("MP Potion", (this->getInventoryItem("MP Potion").numOfItems - 1));
-				this->setCurrentMP(this->getCurrentMP() + 20);
-				cout << "* MP increased by 20. (MP Potion used: " << this->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
+			else if (this->inventory->checkIndexItem(inputItem, "MP Potion")) {
+				if (this->getCurrentMP() < this->getMaxMP()) {
+					this->inventory->setInventoryItem("MP Potion", (this->inventory->getInventoryItem("MP Potion").numOfItems - 1));
+					if ((this->getCurrentMP() + 20) < this->getMaxMP()) {
+						this->setCurrentMP(this->getCurrentMP() + 20);
+					}
+					else {
+						this->setCurrentMP(this->getMaxMP());
+					}
+					cout << "* MP increased by 20. (MP Potion used: " << this->inventory->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
+				}
+				else {
+					cout << "* Recovery is already complete.\n" << endl;
+				}
 			}
 			else {
 				cout << "That item is currently unavailable.\n" << endl;
@@ -164,66 +152,7 @@ void Player::useItem(void) {
 		}
 	} while (inputItem < 0 && inputItem >= 10);
 }
-void Player::inventoryItemDelete(string itemName) {
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == itemName) {
-			this->inventory.erase(this->inventory.begin() + i);
-			break;
-		}
-	}
-}
-void Player::inventoryItemDelete(Item item) {
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == item.name) {
-			this->inventory.erase(this->inventory.begin() + i);
-			break;
-		}
-	}
-}
-void Player::setInventoryItem(string itemName, int numberOfItems) {
-	bool isItem = false;
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == itemName) {
-			this->inventory[i].numOfItems = numberOfItems;
-			isItem = true;
-			break;
-		}
-	}
-	if (!isItem) {
-		cout << "You don't have item in your inventory." << endl;
-	}
-}
-void Player::setInventoryItem(Item item, int numberOfItems) {
-	bool isItem = false;
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == item.name) {
-			this->inventory[i].numOfItems = numberOfItems;
-			isItem = true;
-			break;
-		}
-	}
-	if (!isItem) {
-		this->inventory.push_back(item);
-	}
-}
-const Item Player::getInventoryItem(string itemName) {
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == itemName) {
-			return this->inventory[i];
-		}
-	}
-	Item item;
-	return item;
-}
-const Item Player::getInventoryItem(Item itemObject) {
-	for (int i = 0; i < this->inventory.size(); i++) {
-		if (this->inventory[i].name == itemObject.name) {
-			return this->inventory[i];
-		}
-	}
-	Item item;
-	return item;
-}
+
 void Player::gainExp(int expReward) {
 	this->exp += expReward;
 

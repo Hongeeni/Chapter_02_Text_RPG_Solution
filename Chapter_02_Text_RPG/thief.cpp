@@ -89,9 +89,9 @@ void Thief::attack(Monster* monster) {
 					this->gainExp(monster->getExp());
 					cout << "\n	=> Got: " << item.name << "!" << endl;
 
-					if (this->getInventory().size() < 10) {
-						int tempNumOfItem = this->getInventoryItem(item).numOfItems;
-						this->setInventoryItem(item, tempNumOfItem + 1);
+					if (this->inventory->getInventorySize() < 10) {
+						int tempNumOfItem = this->inventory->getInventoryItem(item.name).numOfItems;
+						this->inventory->setInventoryItem(item);
 						cout << "	=> Saved to inventory." << endl;
 					}
 					else {
@@ -128,9 +128,9 @@ void Thief::attack(Monster* monster) {
 						this->gainExp(monster->getExp());
 						cout << "\n	=> Got: " << item.name << "!" << endl;
 
-						if (this->getInventory().size() < 10) {
-							int tempNumOfItem = this->getInventoryItem(item).numOfItems;
-							this->setInventoryItem(item, tempNumOfItem + 1);
+						if (this->inventory->getInventorySize() < 10) {
+							int tempNumOfItem = this->inventory->getInventoryItem(item.name).numOfItems;
+							this->inventory->setInventoryItem(item);
 							cout << "	=> Saved to inventory." << endl;
 						}
 						else {

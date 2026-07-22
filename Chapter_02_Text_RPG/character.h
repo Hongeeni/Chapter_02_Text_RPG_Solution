@@ -1,7 +1,7 @@
 #ifndef _CHARACTER_H_
 #define _CHARACTER_H_
 
-#include "monster.h"
+#include "Inventory.h"
 
 class Player {
 protected:
@@ -17,10 +17,9 @@ protected:
 	//stats[0] = maxHP, stats[1] = maxMP, stats[2] = ATK, stats[3] = DEF
 	int stats[4] = { 0 };
 
-	//inventory
-	vector<Item> inventory;
-
 public:
+	Inventory<Item>* inventory = nullptr;
+
 	Player(const string name, const int stats[]);
 
 	//setter
@@ -34,9 +33,6 @@ public:
 	void setMaxMP(int newMP);
 	void setPower(int newPower);
 	void setDefence(int newDefence);
-	void pushItem(Item item);
-	void popItem(Item item);
-	void setPotions(int defaultPotions = 5);
 
 	//getter
 	const string getName(void);
@@ -49,27 +45,19 @@ public:
 	const int getMaxMP(void);
 	const int getPower(void);
 	const int getDefence(void);
-	const vector<Item> getInventory(void);
 
 	//Player Information
 	const void printPlayerStatus(void);
 	const void printPlayerCondition(void);
-	const void printInventory(void);
-	//Player Inventory
-	void useItem(void);
-	void inventoryItemDelete(string itemName);
-	void inventoryItemDelete(Item item);
-	void setInventoryItem(string itemName, int numberOfItems);
-	void setInventoryItem(Item item, int numberOfItems);
-	const Item getInventoryItem(string itemName);
-	const Item getInventoryItem(Item itemObject);
-	//Player Level
+
 	void gainExp(int expReward);
+	void useItem(void);
 
 	virtual void getPumped(void) = 0;
 	virtual void attack(Monster* monster) = 0;
 
 	virtual ~Player() {
+		delete inventory;
 		cout << "See you!" << endl;
 	}
 };

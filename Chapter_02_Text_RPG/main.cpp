@@ -2,7 +2,6 @@
 #include "magician.h"
 #include "thief.h"
 #include "archer.h"
-#include "monster.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -19,7 +18,7 @@ vector<Monster> monsterType = { slime , wolf , golem };
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
 //void characterUpgrade(int (*potions)[], const string name, int (*stats)[]);
-void restTent(Player* player);
+void restTent(Player* player, Inventory<Item>* playerInventory);
 void selectJob(Player** player, const string name, const int stats[]);
 void potionWorkshop(void);
 void showAllRecipes(void);
@@ -111,98 +110,12 @@ void printStatus(const string name, const int stats[]) {
 	system("cls");
 }
 
-//select < Character Upgrade > menu
-/*
-void characterUpgrade(int (*potions)[], const string name, int (*stats)[]) {
-	bool isGameStart = false;
-	string userInput = "None";
-	int inputMenu = 0;
-
-	while (!isGameStart) {
-		cout << "* You received " << (*potions)[0] << " HP Potions and " << (*potions)[1] << " MP Potions." << endl;
-		cout << "============================================" << endl;
-		cout << "< Character Upgrade >" << endl;
-		cout << "1. HP UP	2. MP UP	3. Attack x2" << endl;
-		cout << "4. Defence x2  5. Status  0. Start Game" << endl;
-		cout << "============================================" << endl;
-		cout << "Choose: ";
-		cin >> userInput;
-		cout << endl;
-
-		if (userInput >= "0" && userInput <= "9") {
-			inputMenu = stoi(userInput);
-		}
-		else {
-			cout << "Invalid input. Try again.\n" << endl;
-			inputMenu = 9;
-
-			system("pause");
-			system("cls");
-			continue;
-		}
-
-		switch (inputMenu) {
-		case 0:
-			cout << "Starting the game!\n" << endl;
-			isGameStart = true;
-			system("pause");
-			system("cls");
-			break;
-		case 1:
-			if ((*potions)[0] > 0) {
-				(*potions)[0] -= 1;
-				(*stats)[0] += 20;
-				cout << "* HP increased by 20. (HP Potion used: " << (*potions)[0] << " left)\n" << endl;
-			}
-			else {
-				cout << "* You don't have an HP Potion.\n" << endl;
-			}
-			system("pause");
-			system("cls");
-			break;
-		case 2:
-			if ((*potions)[1] > 0) {
-				(*potions)[1] -= 1;
-				(*stats)[1] += 20;
-				cout << "* MP increased by 20. (MP Potion used: " << (*potions)[1] << " left)\n" << endl;
-			}
-			else {
-				cout << "* You don't have an MP Potion.\n" << endl;
-			}
-			system("pause");
-			system("cls");
-			break;
-		case 3:
-			cout << "* Attack has dobled.\n" << endl;
-			(*stats)[2] *= 2;
-			system("pause");
-			system("cls");
-			break;
-		case 4:
-			cout << "* Defence has dobled.\n" << endl;
-			(*stats)[3] *= 2;
-			system("pause");
-			system("cls");
-			break;
-		case 5:
-			printStatus(name, (*stats));
-			break;
-		default:
-			cout << "Invalid input. Try again.\n" << endl;
-			system("pause");
-			system("cls");
-			break;
-		}
-	}
-}
-*/
-
-void restTent(Player* player) {
+void restTent(Player* player, Inventory<Item>* playerInventory) {
 	string userInput = "None";
 	int inputMenu = 0;
 
 	do {
-		cout << "* You received " << player->getInventoryItem("HP Potion").numOfItems << " HP Potions and " << player->getInventoryItem("MP Potion").numOfItems << " MP Potions." << endl;
+		cout << "* You received " << playerInventory->getInventoryItem("HP Potion").numOfItems << " HP Potions and " << playerInventory->getInventoryItem("MP Potion").numOfItems << " MP Potions." << endl;
 		cout << "============================================" << endl;
 		cout << "	< Rest tent >" << endl;
 		cout << "1. HP Recovery	2. MP Recovery\n3. Status	0. Go back" << endl;
@@ -230,10 +143,20 @@ void restTent(Player* player) {
 			system("cls");
 			break;
 		case 1:
-			if (player->getInventoryItem("HP Potion").numOfItems > 0) {
-				player->setInventoryItem("HP Potion", (player->getInventoryItem("HP Potion").numOfItems - 1));
-				player->setCurrentHP(player->getCurrentHP() + 20);
-				cout << "* HP increased by 20. (HP Potion used: " << player->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
+			if (playerInventory->getInventoryItem("HP Potion").numOfItems > 0) {
+				if (player->getCurrentHP() < player->getMaxHP()) {
+					playerInventory->setInventoryItem("HP Potion", (playerInventory->getInventoryItem("HP Potion").numOfItems - 1));
+					if ((player->getCurrentHP() + 20) < player->getMaxHP()) {
+						player->setCurrentHP(player->getCurrentHP() + 20);
+					}
+					else {
+						player->setCurrentHP(player->getMaxHP());
+					}
+					cout << "* HP increased by 20. (HP Potion used: " << playerInventory->getInventoryItem("HP Potion").numOfItems << " left)\n" << endl;
+				}
+				else {
+					cout << "* Recovery is already complete.\n" << endl;
+				}
 			}
 			else {
 				cout << "* You don't have an HP Potion.\n" << endl;
@@ -242,10 +165,20 @@ void restTent(Player* player) {
 			system("cls");
 			break;
 		case 2:
-			if (player->getInventoryItem("MP Potion").numOfItems > 0) {
-				player->setInventoryItem("MP Potion", (player->getInventoryItem("MP Potion").numOfItems - 1));
-				player->setCurrentMP(player->getCurrentMP() + 20);
-				cout << "* MP increased by 20. (MP Potion used: " << player->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
+			if (playerInventory->getInventoryItem("MP Potion").numOfItems > 0) {
+				if (player->getCurrentMP() < player->getMaxMP()) {
+					playerInventory->setInventoryItem("MP Potion", (playerInventory->getInventoryItem("MP Potion").numOfItems - 1));
+					if ((player->getCurrentMP() + 20) < player->getMaxMP()) {
+						player->setCurrentMP(player->getCurrentMP() + 20);
+					}
+					else {
+						player->setCurrentMP(player->getMaxMP());
+					}
+					cout << "* MP increased by 20. (MP Potion used: " << playerInventory->getInventoryItem("MP Potion").numOfItems << " left)\n" << endl;
+				}
+				else {
+					cout << "* Recovery is already complete.\n" << endl;
+				}
 			}
 			else {
 				cout << "* You don't have an MP Potion.\n" << endl;
@@ -525,13 +458,13 @@ void adventure(Player* player) {
 					cout << "\n\nThe hero returned home after finishing the adventure.\n\nExiting the game." << endl << endl;
 					break;
 				case 1:
-					restTent(player);
+					restTent(player, player->inventory);
 					break;
 				}
 			}
 			break;
 		case 2:
-			restTent(player);
+			restTent(player, player->inventory);
 			break;
 		case 3:
 			player->printPlayerStatus();
@@ -539,7 +472,7 @@ void adventure(Player* player) {
 			system("cls");
 			break;
 		case 4:
-			player->printInventory();
+			player->inventory->printInventory(player->getName());
 			system("pause");
 			system("cls");
 			break;
