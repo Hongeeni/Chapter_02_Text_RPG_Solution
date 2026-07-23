@@ -7,10 +7,10 @@ Magician::Magician(const string name, const int stats[]) : Player(name, stats) {
 	this->currentMP = this->stats[1];
 }
 
-const void Magician::setSpecialAttackCost(int cost) {
+void Magician::setSpecialAttackCost(int cost) {
 	this->specialAttackCost = cost;
 }
-int Magician::getSpecialAttackCost(void) {
+const int Magician::getSpecialAttackCost(void) {
 	return this->specialAttackCost;
 }
 
@@ -215,4 +215,8 @@ void Magician::attack(Monster* monster) {
 		system("pause");
 		system("cls");
 	} while (this->getCurrentHP() > 0 && monster->getCurrentHP() > 0);
+}
+
+Magician::~Magician(void) {
+	cout << "Thank you for playing!" << endl;
 }

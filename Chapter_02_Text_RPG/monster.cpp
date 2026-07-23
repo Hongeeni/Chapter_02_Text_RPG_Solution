@@ -58,3 +58,5 @@ const int Monster::getDropItemPrice(void) {
 const void Monster::printMonsterCondition(void) {
 	cout << this->getName() << " HP: " << this->getCurrentHP() << "/" << this->getMaxHP() << endl;
 }
+
+Monster::~Monster() {}

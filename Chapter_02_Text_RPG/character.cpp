@@ -168,8 +168,8 @@ void Player::gainExp(int expReward) {
 		cout << "	=> HP +" << this->stats[0] / 2 << ", MP +" << this->stats[1] / 2 << ", Attack +" << (this->stats[2]) / 4 << ", Defence +" << (this->stats[3]) / 4 << endl;
 
 		for (int i = 0; i < 2; i++) {
-			this->stats[i] += this->stats[i] / 3;
-			this->stats[i + 2] += (this->stats[i + 2]) / 5;
+			this->stats[i] += this->stats[i] / 4;
+			this->stats[i + 2] += (this->stats[i + 2]) / 6;
 		}
 		this->currentHP = this->stats[0];
 		this->currentMP = this->stats[1];

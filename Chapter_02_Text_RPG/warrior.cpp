@@ -6,10 +6,10 @@ Warrior::Warrior(const string name, const int stats[]) : Player(name, stats) {
 	this->stats[3] += 30;
 }
 
-const void Warrior::setSpecialAttackCost(int cost) {
+void Warrior::setSpecialAttackCost(int cost) {
 	this->specialAttackCost = cost;
 }
-int Warrior::getSpecialAttackCost(void) {
+const int Warrior::getSpecialAttackCost(void) {
 	return this->specialAttackCost;
 }
 
@@ -216,4 +216,8 @@ void Warrior::attack(Monster* monster) {
 		system("pause");
 		system("cls");
 	} while (this->getCurrentHP() > 0 && monster->getCurrentHP() > 0);
+}
+
+Warrior::~Warrior(void) {
+	cout << "Thank you for playing!" << endl;
 }

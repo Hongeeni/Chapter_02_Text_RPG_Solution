@@ -40,7 +40,7 @@ public:
 
 	const void printMonsterCondition(void);
 
-	~Monster() {}
+	~Monster();
 };
 
 #endif

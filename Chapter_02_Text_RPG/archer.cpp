@@ -8,10 +8,10 @@ Archer::Archer(const string name, const int stats[]) : Player(name, stats) {
 	this->currentHP = this->stats[0];
 }
 
-const void Archer::setSpecialAttackCost(int cost) {
+void Archer::setSpecialAttackCost(int cost) {
 	this->specialAttackCost = cost;
 }
-int Archer::getSpecialAttackCost(void) {
+const int Archer::getSpecialAttackCost(void) {
 	return this->specialAttackCost;
 }
 
@@ -210,4 +210,8 @@ void Archer::attack(Monster* monster) {
 		system("pause");
 		system("cls");
 	} while (this->getCurrentHP() > 0 && monster->getCurrentHP() > 0);
+}
+
+Archer::~Archer(void) {
+	cout << "Thank you for playing!" << endl;
 }

@@ -6,10 +6,10 @@ Thief::Thief(const string name, const int stats[]) : Player(name, stats) {
 	this->stats[2] += 30;
 }
 
-const void Thief::setSpecialAttackCost(int cost) {
+void Thief::setSpecialAttackCost(int cost) {
 	this->specialAttackCost = cost;
 }
-int Thief::getSpecialAttackCost(void) {
+const int Thief::getSpecialAttackCost(void) {
 	return this->specialAttackCost;
 }
 
@@ -207,4 +207,8 @@ void Thief::attack(Monster* monster) {
 		system("pause");
 		system("cls");
 	} while (this->getCurrentHP() > 0 && monster->getCurrentHP() > 0);
+}
+
+Thief::~Thief(void) {
+	cout << "Thank you for playing!" << endl;
 }
