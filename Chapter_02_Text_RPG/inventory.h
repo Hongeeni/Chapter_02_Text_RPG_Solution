@@ -6,16 +6,21 @@
 template <typename T>
 class Inventory {
 protected:
-	T* pItems = nullptr;
-	Item* temp = nullptr;
-
 	int capacity = 10;		//Inventory capacity.
 	int inventorySize = 0;	//Maximum index in use.
 
 public:
+	T* pItems = nullptr;
+	Item* temp = nullptr;
+
 	Inventory(void) {
 		this->pItems = new T[this->capacity];
 		addPotions();
+	}
+
+	//setter
+	void setCapacity(int newCapacity) {
+		this->capacity = newCapacity;
 	}
 
 	//getter
@@ -27,6 +32,16 @@ public:
 	}
 
 	//functional
+	void resizeInventory(int newCapacity) {
+		T* pTemp = this->pItems;
+		this->pItems = nullptr;
+
+		delete[] pTemp;
+		this->capacity = newCapacity;
+		this->pItems = new T[this->capacity];
+		cout << "	=> Inventory expanded!\n	=> Inventory Capacity: " << this->capacity << endl;
+	}
+
 	void addInventoryItem(T item) {
 		if (this->inventorySize < this->capacity) {
 			this->pItems[this->inventorySize] = item;
@@ -78,6 +93,19 @@ public:
 		this->temp = nullptr;
 	}
 
+	const bool checkIndexItem(int itemIndex, string itemName) {
+		this->temp = &(this->pItems[itemIndex]);
+		if (this->temp->name == itemName) {
+			this->temp = nullptr;
+			return true;
+		}
+		else {
+			this->temp = nullptr;
+			return false;
+		}
+		this->temp = nullptr;
+		return false;
+	}
 	const T getInventoryItem(string itemName) {
 		for (int i = 0; i < this->inventorySize; i++) {
 			this->temp = &(this->pItems[i]);
@@ -97,7 +125,6 @@ public:
 				this->removeInventoryItem(this->temp);
 			}
 		}
-
 		cout << "===========================================\n	[ " << playerName << "'s Inventory " << this->inventorySize << "/" << this->capacity << " ]\n===========================================" << endl;
 		for (int i = 0; i < this->inventorySize; i++) {
 			this->temp = &(this->pItems[i]);
@@ -109,17 +136,6 @@ public:
 		this->temp = nullptr;
 	}
 
-	const bool checkIndexItem(int itemIndex, string itemName) {
-		this->temp = &(this->pItems[itemIndex]);
-		if (this->temp->name == itemName) {
-			this->temp = nullptr;
-			return true;
-		}
-		else {
-			this->temp = nullptr;
-			return false;
-		}
-	}
 	void addPotions(int defaultPotions = 5) {
 		Item hpPotion = { "HP Potion", defaultPotions, 50 };
 		Item mpPotion = { "MP Potion", defaultPotions, 50 };

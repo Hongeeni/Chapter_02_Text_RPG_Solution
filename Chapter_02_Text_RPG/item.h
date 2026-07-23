@@ -1,6 +1,7 @@
 #ifndef _ITEM_H_
 #define _ITME_H_
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>

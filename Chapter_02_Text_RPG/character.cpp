@@ -1,5 +1,9 @@
 #include "character.h"
 
+const bool compareByPrice(const Item& a, const Item& b) {
+	return a.price < b.price;
+}
+
 Player::Player(const string name, const int stats[]) {
 	this->name = name;
 	this->currentHP = stats[0];	// currentHP
@@ -11,7 +15,6 @@ Player::Player(const string name, const int stats[]) {
 
 	this->inventory = new Inventory<Item>;
 }
-
 
 //setter
 void Player::setName(string newName) {
@@ -89,11 +92,15 @@ const void Player::printPlayerCondition(void) {
 	cout << this->getName() << " HP: " << this->getCurrentHP() << "/" << this->getMaxHP() << " MP: " << this->getCurrentMP() << "/" << this->getMaxMP() << endl;
 }
 
+void Player::sortItems(void) {
+	sort(this->inventory->pItems, this->inventory->pItems + this->inventory->getInventorySize(), compareByPrice);
+}
 void Player::useItem(void) {
 	string userInput = "None";
 	int inputItem = 0;
 
 	do {
+		this->sortItems();
 		this->inventory->printInventory(this->getName());
 		cout << "Choose Item Number: ";
 		cin >> userInput;

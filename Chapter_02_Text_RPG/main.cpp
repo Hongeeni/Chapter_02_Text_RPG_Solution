@@ -17,7 +17,6 @@ vector<Monster> monsterType = { slime , wolf , golem };
 
 void setStatus(string* name, int (*stats)[]);
 void printStatus(const string name, const int stats[]);
-//void characterUpgrade(int (*potions)[], const string name, int (*stats)[]);
 void restTent(Player* player, Inventory<Item>* playerInventory);
 void selectJob(Player** player, const string name, const int stats[]);
 void potionWorkshop(void);
@@ -204,7 +203,6 @@ void selectJob(Player** player, const string name, const int stats[]) {
 		cout << "============================================\n	< Job Selection >\n" << name << ", choose your job!" << endl;
 		cout << "1. Warrior   2. Mage   3. Rogue   4. Archer" << endl;
 		cout << "============================================" << endl;
-
 		cout << "Choose: ";
 		cin >> userInput;
 		cout << endl;
@@ -214,7 +212,6 @@ void selectJob(Player** player, const string name, const int stats[]) {
 		}
 		else {
 			cout << "Invalid input. Try again.\n" << endl;
-
 			system("pause");
 			system("cls");
 			continue;
@@ -255,7 +252,6 @@ void potionWorkshop(void) {
 		cout << "============================================\n	< Potion Workshop >\n============================================" << endl;
 		cout << "1. Show all recipes\n2. Search by potion name\n3. Search by ingredient\n0. Go back" << endl;
 		cout << "============================================" << endl;
-
 		cout << "Choose: ";
 		cin >> userInput;
 		cout << endl;
@@ -330,11 +326,9 @@ void searchByName(string potionName) {
 		remove(tempName.begin(), tempName.end(), ' ');
 		tempName.pop_back();
 
-
 		for (int i = 0; i < tempName.size(); i++) {
 			tempName[i] = tolower(tempName[i]);
 		}
-
 		if (potionName == tempName) {
 			isFound = true;
 			cout << "=> ";
@@ -343,11 +337,9 @@ void searchByName(string potionName) {
 			break;
 		}
 	}
-
 	if (!isFound) {
 		cout << "Potion can't be found.\n" << endl;
 	}
-
 	system("pause");
 	system("cls");
 }
@@ -374,7 +366,6 @@ void searchByIngredient(string potionIngredient) {
 				tempIngredient[x].pop_back();
 			}
 		}
-
 		if (potionIngredient == tempIngredient[0] || potionIngredient == tempIngredient[1]) {
 			isFound = true;
 			cout << "=> ";
@@ -382,7 +373,6 @@ void searchByIngredient(string potionIngredient) {
 			cout << endl;
 		}
 	}
-
 	if (!isFound) {
 		cout << "Potion can't be found.\n" << endl;
 	}
@@ -472,6 +462,7 @@ void adventure(Player* player) {
 			system("cls");
 			break;
 		case 4:
+			player->sortItems();
 			player->inventory->printInventory(player->getName());
 			system("pause");
 			system("cls");

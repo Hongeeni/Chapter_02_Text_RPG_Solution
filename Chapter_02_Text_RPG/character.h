@@ -50,8 +50,9 @@ public:
 	const void printPlayerStatus(void);
 	const void printPlayerCondition(void);
 
-	void gainExp(int expReward);
+	void sortItems(void);
 	void useItem(void);
+	void gainExp(int expReward);
 
 	virtual void getPumped(void) = 0;
 	virtual void attack(Monster* monster) = 0;

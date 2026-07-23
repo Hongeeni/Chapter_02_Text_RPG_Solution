@@ -90,12 +90,14 @@ void Warrior::attack(Monster* monster) {
 					cout << "\n	=> Got: " << item.name << "!" << endl;
 
 					if (this->inventory->getInventorySize() < this->inventory->getCapacity()) {
-						int tempNumOfItem = this->inventory->getInventoryItem(item.name).numOfItems;
 						this->inventory->setInventoryItem(item);
 						cout << "	=> Saved to inventory." << endl;
 					}
 					else {
-						cout << "	=> Inventory is full." << endl;
+						cout << "	=> Inventory is full.\n	=> Expanding the inventory.\n" << endl;
+						this->inventory->resizeInventory(this->inventory->getCapacity() + 5);
+						this->inventory->setInventoryItem(item);
+						cout << "	=> Saved to inventory." << endl;
 					}
 				}
 				isPlayerTurn = !isPlayerTurn;
@@ -137,13 +139,15 @@ void Warrior::attack(Monster* monster) {
 						this->gainExp(monster->getExp());
 						cout << "\n	=> Got: " << item.name << "!" << endl;
 
-						if (this->inventory->getInventorySize() < 10) {
-							int tempNumOfItem = this->inventory->getInventoryItem(item.name).numOfItems;
+						if (this->inventory->getInventorySize() < this->inventory->getCapacity()) {
 							this->inventory->setInventoryItem(item);
 							cout << "	=> Saved to inventory." << endl;
 						}
 						else {
-							cout << "	=> Inventory is full." << endl;
+							cout << "	=> Inventory is full.\n	=> Expanding the inventory.\n" << endl;
+							this->inventory->resizeInventory(this->inventory->getCapacity() + 5);
+							this->inventory->setInventoryItem(item);
+							cout << "	=> Saved to inventory." << endl;
 						}
 					}
 				}
